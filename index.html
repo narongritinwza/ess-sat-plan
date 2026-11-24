@@ -189,12 +189,11 @@
         </div>
       </div>
 
-      <!-- Cloud Sync & Primary Action Toolbar -->
+      <!-- Local Storage & Primary Action Toolbar -->
       <div class="flex items-center space-x-2 flex-wrap gap-y-2">
-        <!-- Cloud Status Badge -->
-        <button id="cloudStatusBtn" onclick="toggleCloudSyncModal()" class="px-3 py-1.5 rounded-lg bg-indigo-900 hover:bg-indigo-800 border border-indigo-700 text-xs font-medium flex items-center space-x-2 text-indigo-200 transition">
-          <span id="cloudDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span id="cloudStatusText">Cloud Synced</span>
+        <button id="localStorageStatusBtn" onclick="showLocalStorageInfo()" class="px-3 py-1.5 rounded-lg bg-indigo-900 hover:bg-indigo-800 border border-indigo-700 text-xs font-medium flex items-center space-x-2 text-indigo-200 transition">
+          <span id="cloudDot" class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+          <span>Local Storage</span>
         </button>
 
         <button onclick="openAddModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-semibold shadow transition flex items-center space-x-1.5">
@@ -629,19 +628,8 @@
   <!-- TOAST NOTIFICATION CONTAINER -->
   <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none no-print"></div>
 
-  <!-- FIREBASE MODULE & MAIN LOGIC SCRIPT -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, doc, onSnapshot, setDoc, updateDoc, deleteDoc, writeBatch, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-    // Application state
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'ess-workflow-plan-2026';
-    let db = null;
-    let auth = null;
-    let currentUser = null;
-    let isCloudSynced = false;
-
+  <!-- MAIN LOGIC SCRIPT -->
+  <script>
     // All 47 Default Projects Data
     const INITIAL_PROJECTS = [
       { id: '1', name: 'DoHome - Chon Buri', qty: 4, province: 'ชลบุรี', planDate: '2026-03-05', actualDate: '2026-03-05', isTBD: false, status: 'done', eng: ['Narongrit Taprasan', 'Sukran Maming'], satDone: true, satDate: '2026-03-10', satSubmitted: '2026-03-10', poNo: 'PO-DOHOME-01', poDate: '2026-01-10', step1: true, step2: true, step3: true, step4: true, step5: true },
@@ -698,13 +686,12 @@
     let activeTab = 'step';
 
     // Initialize Application
-    window.addEventListener('DOMContentLoaded', async () => {
+    window.addEventListener('DOMContentLoaded', () => {
       document.getElementById('printDateStr').innerText = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
       initLocalOrCloudStore();
-      setupFirebase();
     });
 
-    // Local Storage & Cloud Sync Setup
+    // Local Storage Setup
     function initLocalOrCloudStore() {
       const saved = localStorage.getItem('ess_projects_data_v7');
       if (saved) {
@@ -717,80 +704,6 @@
         localStorage.setItem('ess_projects_data_v7', JSON.stringify(INITIAL_PROJECTS));
       }
       applyFilters();
-    }
-
-    async function setupFirebase() {
-      if (typeof __firebase_config === 'undefined') {
-        updateCloudStatus(false, 'Local Storage Mode');
-        return;
-      }
-      try {
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        db = getFirestore(app);
-        auth = getAuth(app);
-
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          await signInWithCustomToken(auth, __initial_auth_token);
-        } else {
-          await signInAnonymously(auth);
-        }
-
-        onAuthStateChanged(auth, (user) => {
-          if (user) {
-            currentUser = user;
-            subscribeToFirestore();
-          }
-        });
-      } catch (err) {
-        console.warn("Firebase Init fallback to Local Storage:", err);
-        updateCloudStatus(false, 'Local Mode');
-      }
-    }
-
-    function subscribeToFirestore() {
-      if (!db || !currentUser) return;
-      const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'projects');
-
-      onSnapshot(colRef, async (snapshot) => {
-        if (snapshot.empty) {
-          // Seed database with all 47 projects
-          const batch = writeBatch(db);
-          INITIAL_PROJECTS.forEach((p) => {
-            const pRef = doc(db, 'artifacts', appId, 'public', 'data', 'projects', p.id);
-            batch.set(pRef, p);
-          });
-          await batch.commit();
-          updateCloudStatus(true, 'Cloud Synced');
-          return;
-        }
-
-        const cloudData = [];
-        snapshot.forEach((docSnap) => {
-          cloudData.push(docSnap.data());
-        });
-
-        projects = cloudData.sort((a, b) => parseInt(a.id) - parseInt(b.id));
-        localStorage.setItem('ess_projects_data_v7', JSON.stringify(projects));
-        updateCloudStatus(true, 'Cloud Synced');
-        applyFilters();
-      }, (error) => {
-        console.error("Firestore Listen Error:", error);
-        updateCloudStatus(false, 'Sync Offline');
-      });
-    }
-
-    function updateCloudStatus(synced, text) {
-      isCloudSynced = synced;
-      const dot = document.getElementById('cloudDot');
-      const txt = document.getElementById('cloudStatusText');
-      if (synced) {
-        dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse";
-        txt.innerText = text || "Cloud Synced";
-      } else {
-        dot.className = "w-2.5 h-2.5 rounded-full bg-amber-400";
-        txt.innerText = text || "Local Storage";
-      }
     }
 
     // TAB SWITCHING
@@ -1078,7 +991,7 @@
       document.getElementById('projectModal').classList.add('hidden');
     }
 
-    window.saveProjectForm = async function(e) {
+    window.saveProjectForm = function(e) {
       e.preventDefault();
       const id = document.getElementById('editProjectId').value || String(Date.now());
       const name = document.getElementById('formName').value.trim();
@@ -1121,17 +1034,7 @@
       localStorage.setItem('ess_projects_data_v7', JSON.stringify(projects));
       applyFilters();
       closeModal();
-      showToast("บันทึกข้อมูลโครงการเรียบร้อยแล้ว", "success");
-
-      // Save to Firebase Cloud
-      if (db && currentUser) {
-        try {
-          const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'projects', id);
-          await setDoc(docRef, projectData, { merge: true });
-        } catch(err) {
-          console.error("Firestore Save Error:", err);
-        }
-      }
+      showToast("บันทึกข้อมูลโครงการในเครื่องนี้เรียบร้อยแล้ว", "success");
     }
 
     // CONFIRM DELETE MODAL
@@ -1143,22 +1046,13 @@
       document.getElementById('confirmModal').classList.remove('hidden');
     }
 
-    window.closeConfirmModal = async function(confirmed) {
+    window.closeConfirmModal = function(confirmed) {
       document.getElementById('confirmModal').classList.add('hidden');
       if (confirmed && pendingDeleteId) {
         projects = projects.filter(p => p.id !== pendingDeleteId);
         localStorage.setItem('ess_projects_data_v7', JSON.stringify(projects));
         applyFilters();
-
-        if (db && currentUser) {
-          try {
-            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'projects', pendingDeleteId);
-            await deleteDoc(docRef);
-          } catch(err) {
-            console.error("Firestore Delete Error:", err);
-          }
-        }
-        showToast("ลบโครงการเรียบร้อยแล้ว", "error");
+        showToast("ลบโครงการจากเครื่องนี้เรียบร้อยแล้ว", "success");
       }
       pendingDeleteId = null;
     }
@@ -1169,7 +1063,11 @@
       const toast = document.createElement('div');
       const colorClass = type === 'success' ? 'bg-emerald-800 text-white' : (type === 'error' ? 'bg-red-800 text-white' : 'bg-indigo-900 text-white');
       toast.className = `px-4 py-3 rounded-xl shadow-xl text-sm font-semibold flex items-center space-x-2 transition-all duration-300 pointer-events-auto ${colorClass}`;
-      toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i><span>${msg}</span>`;
+      const icon = document.createElement('i');
+      icon.className = `fas ${type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle')}`;
+      const message = document.createElement('span');
+      message.textContent = msg;
+      toast.append(icon, message);
       container.appendChild(toast);
       setTimeout(() => {
         toast.style.opacity = '0';
@@ -1357,9 +1255,8 @@
       reader.readAsText(file);
     }
 
-    // Modal Info Display
-    window.toggleCloudSyncModal = function() {
-      showToast(isCloudSynced ? "เชื่อมต่อคลาวด์เรียบร้อย (Firestore Sync)" : "ใช้งานในโหมด Local Storage", isCloudSynced ? "success" : "info");
+    window.showLocalStorageInfo = function() {
+      showToast("ข้อมูลถูกบันทึกใน browser นี้เท่านั้น และไม่ sync ไปอุปกรณ์อื่น", "info");
     }
 
     // Keyboard Shortcuts (Ctrl+S, Ctrl+L)
