@@ -1,0 +1,1374 @@
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESS Project Workflow & Commissioning Plan - Polytechnology Co., Ltd.</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Sarabun, Quicksand, IBM Plex Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Quicksand:wght@600;700&family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- SheetJS (xlsx) for Multi-sheet Excel Export -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <style>
+    /* TH Sarabun New typography setup with Sarabun fallback */
+    @font-face {
+      font-family: 'TH Sarabun New';
+      src: local('TH Sarabun New'), local('THSarabunNew'),
+           url('https://cdn.jsdelivr.net/gh/phetsamone/fonts/THSarabunNew.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'TH Sarabun New';
+      src: local('TH Sarabun New Bold'), local('THSarabunNew-Bold'),
+           url('https://cdn.jsdelivr.net/gh/phetsamone/fonts/THSarabunNew%20Bold.ttf') format('truetype');
+      font-weight: bold;
+      font-style: normal;
+    }
+
+    body {
+      font-family: 'TH Sarabun New', 'Sarabun', sans-serif;
+      font-size: 19px;
+      line-height: 1.35;
+      background-color: #f4f6f9;
+      color: #1f2937;
+    }
+
+    .font-mono {
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    /* Logo header styles */
+    .header-logo {
+      width: 96px;
+      height: 78px;
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 4px 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Workflow Step badges */
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      font-size: 14px;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .step-badge.done {
+      background-color: #10b981;
+      color: white;
+    }
+    .step-badge.pending {
+      background-color: #e2e8f0;
+      color: #64748b;
+      border: 1px dashed #cbd5e1;
+    }
+    .step-badge.active {
+      background-color: #3b82f6;
+      color: white;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    }
+
+    /* Table styling for TH Sarabun New readability */
+    table th {
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: 0.2px;
+      background-color: #1e1b4b;
+      color: #ffffff;
+    }
+    table td {
+      font-size: 17px;
+      vertical-align: middle;
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        background-color: white !important;
+        font-size: 14px !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-only {
+        display: block !important;
+      }
+      .container-fluid {
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .shadow-lg, .shadow-md, .shadow-sm {
+        box-shadow: none !important;
+      }
+      .border {
+        border-color: #cbd5e1 !important;
+      }
+      table th {
+        background-color: #1e1b4b !important;
+        color: white !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+    .print-only {
+      display: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- TOP BRAND HEADER -->
+  <header class="bg-indigo-950 text-white shadow-md border-b-4 border-indigo-600 no-print">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand & Title -->
+      <div class="flex items-center space-x-4">
+        <!-- EXACT INLINE SVG LOGO -->
+        <div class="header-logo">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="65 170 870 715" style="width:100%;height:100%;display:block">
+            <!-- Outer rounded rectangle border -->
+            <rect x="166" y="201" width="646" height="534" rx="108" ry="108" fill="#ffffff" stroke="#28067E" stroke-width="20"/>
+            <!-- Top horizontal crossbar -->
+            <rect x="238" y="281" width="514" height="67" fill="#28067E"/>
+            <!-- Upper vertical stem of 't' -->
+            <rect x="474" y="256" width="67" height="114" fill="#28067E"/>
+            <!-- Lower vertical stem of 't' -->
+            <rect x="474" y="392" width="67" height="138" fill="#28067E"/>
+            <!-- Curved bottom hook of 't' -->
+            <path d="M 474 528 A 139 139 0 0 0 752 528 L 685 528 A 72 72 0 0 1 541 528 Z" fill="#28067E"/>
+            <!-- Letter 'p' left vertical stem -->
+            <rect x="238" y="528" width="65" height="140" fill="#28067E"/>
+            <!-- Letter 'p' circular bowl -->
+            <path fill-rule="evenodd" d="M 372 393 A 135 135 0 1 0 372 663 A 135 135 0 1 0 372 393 Z M 372 457 A 71 71 0 1 1 372 599 A 71 71 0 1 1 372 457 Z" fill="#28067E"/>
+            <!-- Bottom brand text -->
+            <text x="500" y="845" text-anchor="middle" fill="#28067E" font-family="'Century Gothic', 'Quicksand', 'Nunito', 'Trebuchet MS', sans-serif" font-size="80" font-weight="600" letter-spacing="1.5">polytechnology co.,ltd.</text>
+          </svg>
+        </div>
+
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-indigo-800 text-indigo-200 border border-indigo-700 font-mono">BESS-COMM-2026</span>
+            <span class="text-xs px-2 py-0.5 rounded bg-emerald-800 text-emerald-200 font-mono">REV. 07</span>
+          </div>
+          <h1 class="text-2xl font-bold text-white tracking-wide leading-tight">ESS Project Workflow & Commissioning Plan</h1>
+          <p class="text-xs text-indigo-200">บริษัท โพลีเทคโนโลยี จำกัด | POLYTECHNOLOGY CO., LTD.</p>
+        </div>
+      </div>
+
+      <!-- Cloud Sync & Primary Action Toolbar -->
+      <div class="flex items-center space-x-2 flex-wrap gap-y-2">
+        <!-- Cloud Status Badge -->
+        <button id="cloudStatusBtn" onclick="toggleCloudSyncModal()" class="px-3 py-1.5 rounded-lg bg-indigo-900 hover:bg-indigo-800 border border-indigo-700 text-xs font-medium flex items-center space-x-2 text-indigo-200 transition">
+          <span id="cloudDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="cloudStatusText">Cloud Synced</span>
+        </button>
+
+        <button onclick="openAddModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-semibold shadow transition flex items-center space-x-1.5">
+          <i class="fas fa-plus-circle"></i>
+          <span>เพิ่มโครงการใหม่</span>
+        </button>
+
+        <!-- Dropdown Menu for Exports -->
+        <div class="relative inline-block text-left group">
+          <button class="px-3 py-1.5 bg-indigo-800 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition flex items-center space-x-1">
+            <i class="fas fa-file-export mr-1"></i>
+            <span>ส่งออก / รายงาน</span>
+            <i class="fas fa-chevron-down text-xs ml-1"></i>
+          </button>
+          <div class="hidden group-hover:block absolute right-0 mt-0 w-52 bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50 text-gray-800 text-sm">
+            <a href="#" onclick="exportExcel(); return false;" class="px-4 py-2 hover:bg-indigo-50 flex items-center space-x-2 text-emerald-700">
+              <i class="fas fa-file-excel w-5"></i><span>Export Excel (.xlsx)</span>
+            </a>
+            <a href="#" onclick="exportWord(); return false;" class="px-4 py-2 hover:bg-indigo-50 flex items-center space-x-2 text-blue-700">
+              <i class="fas fa-file-word w-5"></i><span>Export Word (.doc)</span>
+            </a>
+            <a href="#" onclick="exportCSV(); return false;" class="px-4 py-2 hover:bg-indigo-50 flex items-center space-x-2 text-amber-700">
+              <i class="fas fa-file-csv w-5"></i><span>Export CSV (UTF-8)</span>
+            </a>
+            <a href="#" onclick="saveHTMLState(); return false;" class="px-4 py-2 hover:bg-indigo-50 flex items-center space-x-2 text-purple-700">
+              <i class="fas fa-save w-5"></i><span>บันทึกไฟล์ HTML (Ctrl+S)</span>
+            </a>
+            <hr class="my-1 border-gray-200">
+            <a href="#" onclick="window.print(); return false;" class="px-4 py-2 hover:bg-indigo-50 flex items-center space-x-2 text-gray-700">
+              <i class="fas fa-print w-5"></i><span>พิมพ์รายงาน (Print)</span>
+            </a>
+          </div>
+        </div>
+
+        <button onclick="triggerFileInput()" class="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-lg text-sm font-medium transition flex items-center space-x-1" title="นำเข้าข้อมูล HTML">
+          <i class="fas fa-upload"></i>
+        </button>
+        <input type="file" id="htmlFileInput" accept=".html" class="hidden" onchange="importHTMLState(event)">
+      </div>
+    </div>
+  </header>
+
+  <!-- PRINT ONLY HEADER -->
+  <div class="print-only p-4 border-b-2 border-gray-800 mb-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <div style="width: 80px; height: 65px;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="65 170 870 715" style="width:100%;height:100%;display:block">
+            <rect x="166" y="201" width="646" height="534" rx="108" ry="108" fill="#ffffff" stroke="#28067E" stroke-width="20"/>
+            <rect x="238" y="281" width="514" height="67" fill="#28067E"/>
+            <rect x="474" y="256" width="67" height="114" fill="#28067E"/>
+            <rect x="474" y="392" width="67" height="138" fill="#28067E"/>
+            <path d="M 474 528 A 139 139 0 0 0 752 528 L 685 528 A 72 72 0 0 1 541 528 Z" fill="#28067E"/>
+            <rect x="238" y="528" width="65" height="140" fill="#28067E"/>
+            <path fill-rule="evenodd" d="M 372 393 A 135 135 0 1 0 372 663 A 135 135 0 1 0 372 393 Z M 372 457 A 71 71 0 1 1 372 599 A 71 71 0 1 1 372 457 Z" fill="#28067E"/>
+            <text x="500" y="845" text-anchor="middle" fill="#28067E" font-family="'Century Gothic', 'Quicksand', 'Nunito', sans-serif" font-size="80" font-weight="600">polytechnology co.,ltd.</text>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold">ESS Project Workflow & Commissioning Plan</h1>
+          <p class="text-xs">Document No: BESS-COMM-2026 | Rev. 07 | POLYTECHNOLOGY CO., LTD.</p>
+        </div>
+      </div>
+      <div class="text-right text-xs">
+        <p>วันที่พิมพ์: <span id="printDateStr"></span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto w-full px-4 py-4 flex-1">
+
+    <!-- KPI STATS CARDS BAR -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-4 no-print">
+      <!-- Card 1: Total Projects -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-3 flex flex-col justify-between hover:shadow-md transition">
+        <div class="flex items-center justify-between text-gray-500 mb-1">
+          <span class="text-xs font-semibold uppercase tracking-wider">โครงการทั้งหมด</span>
+          <i class="fas fa-folder-open text-indigo-500"></i>
+        </div>
+        <div class="flex items-baseline justify-between">
+          <span id="kpiTotalProjects" class="text-2xl font-bold text-gray-800 font-mono">0</span>
+          <span class="text-xs text-gray-500">โครงการ</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Total ESS Units -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-3 flex flex-col justify-between hover:shadow-md transition">
+        <div class="flex items-center justify-between text-gray-500 mb-1">
+          <span class="text-xs font-semibold uppercase tracking-wider">จำนวน ESS รวม</span>
+          <i class="fas fa-battery-full text-blue-500"></i>
+        </div>
+        <div class="flex items-baseline justify-between">
+          <span id="kpiTotalESS" class="text-2xl font-bold text-blue-700 font-mono">0</span>
+          <span class="text-xs text-gray-500">ยูนิต</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Comm Completed -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-3 flex flex-col justify-between hover:shadow-md transition">
+        <div class="flex items-center justify-between text-gray-500 mb-1">
+          <span class="text-xs font-semibold uppercase tracking-wider">Comm สำเร็จ</span>
+          <i class="fas fa-check-circle text-emerald-500"></i>
+        </div>
+        <div class="flex items-baseline justify-between">
+          <span id="kpiCommDone" class="text-2xl font-bold text-emerald-600 font-mono">0</span>
+          <span id="kpiCommDonePercent" class="text-xs text-emerald-600 font-semibold">0%</span>
+        </div>
+      </div>
+
+      <!-- Card 4: SAT Submitted -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-3 flex flex-col justify-between hover:shadow-md transition">
+        <div class="flex items-center justify-between text-gray-500 mb-1">
+          <span class="text-xs font-semibold uppercase tracking-wider">ส่ง SAT Report</span>
+          <i class="fas fa-file-signature text-purple-500"></i>
+        </div>
+        <div class="flex items-baseline justify-between">
+          <span id="kpiSatDone" class="text-2xl font-bold text-purple-600 font-mono">0</span>
+          <span id="kpiSatDonePercent" class="text-xs text-purple-600 font-semibold">0%</span>
+        </div>
+      </div>
+
+      <!-- Card 5: SAT Overdue -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-3 flex flex-col justify-between hover:shadow-md transition">
+        <div class="flex items-center justify-between text-gray-500 mb-1">
+          <span class="text-xs font-semibold uppercase tracking-wider">SAT เกินกำหนด</span>
+          <i class="fas fa-exclamation-triangle text-amber-500"></i>
+        </div>
+        <div class="flex items-baseline justify-between">
+          <span id="kpiSatOverdue" class="text-2xl font-bold text-amber-600 font-mono">0</span>
+          <span class="text-xs text-amber-600 font-medium">ค้างส่ง</span>
+        </div>
+      </div>
+
+      <!-- Card 6: Overall Progress -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-3 flex flex-col justify-between hover:shadow-md transition">
+        <div class="flex items-center justify-between text-gray-500 mb-1">
+          <span class="text-xs font-semibold uppercase tracking-wider">ความคืบหน้าภาพรวม</span>
+          <i class="fas fa-chart-line text-indigo-600"></i>
+        </div>
+        <div class="flex items-center space-x-2">
+          <div class="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+            <div id="kpiProgressBar" class="bg-indigo-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+          <span id="kpiProgressText" class="text-sm font-bold text-indigo-900 font-mono">0%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTER & VIEW CONTROLS -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-4 no-print">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+        
+        <!-- View Tabs Switcher -->
+        <div class="flex items-center space-x-1 bg-gray-100 p-1 rounded-lg border border-gray-200">
+          <button id="tabBtn1" onclick="switchTab('step')" class="px-4 py-1.5 rounded-md text-sm font-semibold transition bg-indigo-900 text-white shadow-sm">
+            <i class="fas fa-tasks mr-1.5"></i>ติดตาม 5 ขั้นตอน (PO → Onsite)
+          </button>
+          <button id="tabBtn2" onclick="switchTab('comm')" class="px-4 py-1.5 rounded-md text-sm font-semibold transition text-gray-700 hover:bg-gray-200">
+            <i class="fas fa-clipboard-check mr-1.5"></i>รายละเอียด Commissioning & SAT
+          </button>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- Search box -->
+          <div class="relative min-w-[200px]">
+            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+            <input type="text" id="searchInput" oninput="applyFilters()" placeholder="ค้นหาชื่อโครงการ, จังหวัด..." class="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+
+          <!-- Status Filter -->
+          <select id="statusFilter" onchange="applyFilters()" class="py-1.5 px-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+            <option value="all">สถานะทั้งหมด</option>
+            <option value="done">Commissioning เสร็จสิ้น</option>
+            <option value="pending">รอ ดำเนินการ (Pending)</option>
+            <option value="sat_pending">รอส่ง SAT Report</option>
+            <option value="sat_done">ส่ง SAT Report แล้ว</option>
+          </select>
+
+          <!-- Engineer Filter -->
+          <select id="engineerFilter" onchange="applyFilters()" class="py-1.5 px-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+            <option value="all">วิศวกรทั้งหมด</option>
+            <option value="Narongrit Taprasan">Narongrit Taprasan</option>
+            <option value="Sukran Maming">Sukran Maming</option>
+            <option value="Napat Maensathian">Napat Maensathian</option>
+            <option value="Praphot Auisakul">Praphot Auisakul</option>
+          </select>
+
+          <!-- Reset Filter Button -->
+          <button onclick="resetFilters()" class="py-1.5 px-3 text-sm bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg transition" title="ล้างตัวกรอง">
+            <i class="fas fa-undo"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB CONTENT 1: 5-STEP WORKFLOW TRACKER -->
+    <div id="tabContent1" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
+      <!-- Workflow Legend Header -->
+      <div class="bg-gray-50 border-b border-gray-200 p-3 px-4 flex flex-wrap items-center justify-between text-xs text-gray-600 gap-2 no-print">
+        <span class="font-bold text-indigo-900 text-sm">ขั้นตอนการทำงาน (5 Steps Workflow):</span>
+        <div class="flex items-center space-x-4 flex-wrap gap-y-1">
+          <span class="flex items-center"><span class="step-badge done w-5 h-5 text-xs mr-1">1</span> 1. ได้รับ PO</span>
+          <span class="flex items-center"><span class="step-badge done w-5 h-5 text-xs mr-1">2</span> 2. ส่งของ</span>
+          <span class="flex items-center"><span class="step-badge done w-5 h-5 text-xs mr-1">3</span> 3. Training</span>
+          <span class="flex items-center"><span class="step-badge done w-5 h-5 text-xs mr-1">4</span> 4. Commissioning</span>
+          <span class="flex items-center"><span class="step-badge done w-5 h-5 text-xs mr-1">5</span> 5. Training Onsite</span>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-indigo-900">
+              <th class="py-3 px-3 w-12 text-center">#</th>
+              <th class="py-3 px-4 min-w-[200px]">ชื่อโครงการ / สถานที่</th>
+              <th class="py-3 px-3 w-20 text-center">จำนวน ESS</th>
+              <th class="py-3 px-3 w-28 text-center">จังหวัด</th>
+              <th class="py-3 px-4 min-w-[320px] text-center">ความคืบหน้า 5 ขั้นตอน</th>
+              <th class="py-3 px-3 w-32 text-center">สถานะปัจจุบัน</th>
+              <th class="py-3 px-3 w-24 text-center no-print">การจัดการ</th>
+            </tr>
+          </thead>
+          <tbody id="stepTableBody" class="divide-y divide-gray-200 text-gray-800">
+            <!-- Dynamic JS Rendering -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB CONTENT 2: COMMISSIONING & SAT DETAILS TABLE -->
+    <div id="tabContent2" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6 hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-indigo-900">
+              <th class="py-3 px-3 w-12 text-center">#</th>
+              <th class="py-3 px-4 min-w-[200px]">ชื่อโครงการ</th>
+              <th class="py-3 px-3 w-20 text-center">ESS Qty</th>
+              <th class="py-3 px-3 w-28 text-center">วันที่แผนงาน</th>
+              <th class="py-3 px-3 w-28 text-center">วันที่ทำจริง</th>
+              <th class="py-3 px-3 w-28 text-center">สถานะ Comm</th>
+              <th class="py-3 px-4 min-w-[180px]">วิศวกรผู้รับผิดชอบ</th>
+              <th class="py-3 px-3 w-28 text-center">กำหนดส่ง SAT</th>
+              <th class="py-3 px-3 w-28 text-center">วันที่ส่ง SAT</th>
+              <th class="py-3 px-3 w-28 text-center">SAT Report</th>
+              <th class="py-3 px-3 w-20 text-center no-print">จัดการ</th>
+            </tr>
+          </thead>
+          <tbody id="commTableBody" class="divide-y divide-gray-200 text-gray-800">
+            <!-- Dynamic JS Rendering -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-100 border-t border-gray-200 py-3 text-center text-xs text-gray-500 no-print">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>© 2026 POLYTECHNOLOGY CO., LTD. All rights reserved.</p>
+      <p class="font-mono">BESS-COMM-2026 | REV. 07</p>
+    </div>
+  </footer>
+
+  <!-- ADD / EDIT PROJECT MODAL -->
+  <div id="projectModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden no-print">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh]">
+      <!-- Modal Header -->
+      <div class="bg-indigo-950 text-white px-6 py-4 flex items-center justify-between border-b-4 border-indigo-600">
+        <h3 id="modalTitle" class="text-xl font-bold">เพิ่มโครงการใหม่</h3>
+        <button onclick="closeModal()" class="text-gray-300 hover:text-white text-xl">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <form id="projectForm" onsubmit="saveProjectForm(event)" class="p-6 overflow-y-auto space-y-4">
+        <input type="hidden" id="editProjectId">
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Project Name -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-semibold text-gray-700 mb-1">ชื่อโครงการ *</label>
+            <input type="text" id="formName" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <!-- Province -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">จังหวัด</label>
+            <input type="text" id="formProvince" placeholder="เช่น ชลบุรี, กรุงเทพฯ" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- ESS Qty -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">จำนวน ESS (ยูนิต)</label>
+            <input type="number" id="formQty" min="0" value="1" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none font-mono">
+          </div>
+          <!-- PO No -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">เลขที่ PO</label>
+            <input type="text" id="formPoNo" placeholder="เช่น PO-2026-001" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none font-mono">
+          </div>
+          <!-- PO Date -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">วันที่ออก PO</label>
+            <input type="date" id="formPoDate" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none font-mono">
+          </div>
+        </div>
+
+        <hr class="border-gray-200">
+
+        <h4 class="font-bold text-indigo-900 text-md">การติดตาม 5 ขั้นตอน (5 Steps Workflow)</h4>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
+          <!-- Step 1 -->
+          <div class="flex items-center space-x-2">
+            <input type="checkbox" id="formStep1" class="w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500">
+            <label for="formStep1" class="text-sm font-medium text-gray-700">1. ได้รับ PO</label>
+          </div>
+          <!-- Step 2 -->
+          <div class="flex items-center space-x-2">
+            <input type="checkbox" id="formStep2" class="w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500">
+            <label for="formStep2" class="text-sm font-medium text-gray-700">2. ส่งของ</label>
+          </div>
+          <!-- Step 3 -->
+          <div class="flex items-center space-x-2">
+            <input type="checkbox" id="formStep3" class="w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500">
+            <label for="formStep3" class="text-sm font-medium text-gray-700">3. Pre-Comm Training</label>
+          </div>
+          <!-- Step 4 -->
+          <div class="flex items-center space-x-2">
+            <input type="checkbox" id="formStep4" class="w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500">
+            <label for="formStep4" class="text-sm font-medium text-gray-700">4. Commissioning</label>
+          </div>
+          <!-- Step 5 -->
+          <div class="flex items-center space-x-2">
+            <input type="checkbox" id="formStep5" class="w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500">
+            <label for="formStep5" class="text-sm font-medium text-gray-700">5. Onsite Training</label>
+          </div>
+        </div>
+
+        <h4 class="font-bold text-indigo-900 text-md">แผนงาน Commissioning & SAT</h4>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- TBD Plan Checkbox -->
+          <div class="flex items-center space-x-2">
+            <input type="checkbox" id="formIsTBD" onchange="toggleTBDInput()" class="w-4 h-4 text-indigo-600 rounded border-gray-300">
+            <label for="formIsTBD" class="text-sm font-medium text-gray-700">ระบุเป็น TBD (ยังไม่กำหนดวัน)</label>
+          </div>
+
+          <!-- Plan Date -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">วันที่แผนงาน (Plan Date)</label>
+            <input type="date" id="formPlanDate" onchange="autoCalcSATDue()" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none font-mono">
+          </div>
+
+          <!-- Actual Comm Date -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">วันที่ทำจริง (Actual Comm)</label>
+            <input type="date" id="formActualDate" onchange="autoCalcSATDue()" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none font-mono">
+          </div>
+        </div>
+
+        <!-- Assigned Engineers -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">วิศวกรผู้รับผิดชอบ (เลือกได้หลายคน)</label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
+            <label class="inline-flex items-center text-xs">
+              <input type="checkbox" name="engineers" value="Narongrit Taprasan" class="rounded text-indigo-600 mr-1"> Narongrit T.
+            </label>
+            <label class="inline-flex items-center text-xs">
+              <input type="checkbox" name="engineers" value="Sukran Maming" class="rounded text-indigo-600 mr-1"> Sukran M.
+            </label>
+            <label class="inline-flex items-center text-xs">
+              <input type="checkbox" name="engineers" value="Napat Maensathian" class="rounded text-indigo-600 mr-1"> Napat M.
+            </label>
+            <label class="inline-flex items-center text-xs">
+              <input type="checkbox" name="engineers" value="Praphot Auisakul" class="rounded text-indigo-600 mr-1"> Praphot A.
+            </label>
+          </div>
+        </div>
+
+        <hr class="border-gray-200">
+
+        <!-- SAT Section -->
+        <h4 class="font-bold text-indigo-900 text-md">การติดตามรายงาน SAT Report</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-amber-50/50 p-4 rounded-xl border border-amber-200">
+          <div>
+            <label class="block text-sm font-semibold text-amber-900 mb-1">กำหนดส่ง SAT (Auto +7 วัน)</label>
+            <input type="date" id="formSatDue" class="w-full px-3 py-2 border border-amber-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none font-mono bg-white">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-amber-900 mb-1">วันที่ส่ง SAT Report จริง</label>
+            <input type="date" id="formSatSubmitted" class="w-full px-3 py-2 border border-amber-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none font-mono bg-white">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-amber-900 mb-1">แนบไฟล์ SAT Report (PDF)</label>
+            <input type="file" id="formSatFile" accept=".pdf,.doc,.docx" class="w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-amber-600 file:text-white hover:file:bg-amber-700">
+            <span id="fileAttachmentStatus" class="text-xs text-gray-500 mt-1 block"></span>
+          </div>
+        </div>
+
+        <!-- Submit Footer -->
+        <div class="pt-4 flex items-center justify-end space-x-3">
+          <button type="button" onclick="closeModal()" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 text-sm font-medium">ยกเลิก</button>
+          <button type="submit" class="px-5 py-2 bg-indigo-900 hover:bg-indigo-800 text-white rounded-lg text-sm font-semibold shadow">บันทึกข้อมูล</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- CUSTOM CONFIRM MODAL -->
+  <div id="confirmModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden no-print">
+    <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 text-center space-y-4">
+      <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto text-xl">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <h4 id="confirmTitle" class="text-lg font-bold text-gray-800">ยืนยันการลบ</h4>
+      <p id="confirmMessage" class="text-sm text-gray-600">คุณต้องการลบโครงการนี้ใช่หรือไม่?</p>
+      <div class="flex items-center justify-center space-x-3 pt-2">
+        <button onclick="closeConfirmModal(false)" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg text-sm font-medium">ยกเลิก</button>
+        <button id="confirmOkBtn" onclick="closeConfirmModal(true)" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-semibold">ลบข้อมูล</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none no-print"></div>
+
+  <!-- FIREBASE MODULE & MAIN LOGIC SCRIPT -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, doc, onSnapshot, setDoc, updateDoc, deleteDoc, writeBatch, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // Application state
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'ess-workflow-plan-2026';
+    let db = null;
+    let auth = null;
+    let currentUser = null;
+    let isCloudSynced = false;
+
+    // All 47 Default Projects Data
+    const INITIAL_PROJECTS = [
+      { id: '1', name: 'DoHome - Chon Buri', qty: 4, province: 'ชลบุรี', planDate: '2026-03-05', actualDate: '2026-03-05', isTBD: false, status: 'done', eng: ['Narongrit Taprasan', 'Sukran Maming'], satDone: true, satDate: '2026-03-10', satSubmitted: '2026-03-10', poNo: 'PO-DOHOME-01', poDate: '2026-01-10', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '2', name: 'DoHome - Kanchanaburi', qty: 4, province: 'กาญจนบุรี', planDate: '2026-03-09', actualDate: '2026-03-09', isTBD: false, status: 'done', eng: ['Praphot Auisakul'], satDone: true, satDate: '2026-03-16', satSubmitted: '2026-03-16', poNo: 'PO-DOHOME-02', poDate: '2026-01-12', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '3', name: 'DoHome - Ayutthaya', qty: 4, province: 'อยุธยา', planDate: '2026-03-15', actualDate: '2026-03-18', isTBD: false, status: 'done', eng: ['Praphot Auisakul'], satDone: true, satDate: '2026-03-23', satSubmitted: '2026-03-23', poNo: 'PO-DOHOME-03', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '4', name: 'DoHome - Buriram', qty: 4, province: 'บุรีรัมย์', planDate: '2026-03-16', actualDate: '2026-03-16', isTBD: false, status: 'done', eng: ['Praphot Auisakul'], satDone: true, satDate: '2026-03-23', satSubmitted: '2026-03-23', poNo: 'PO-DOHOME-04', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '5', name: 'DoHome - Petchchakaseam', qty: 4, province: 'เพชรบูรณ์', planDate: '2026-03-18', actualDate: '2026-03-25', isTBD: false, status: 'done', eng: ['Narongrit Taprasan', 'Sukran Maming'], satDone: true, satDate: '2026-03-31', satSubmitted: '2026-03-31', poNo: 'PO-DOHOME-05', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '6', name: 'DoHome - Bo Win', qty: 4, province: 'ชลบุรี', planDate: '2026-03-18', actualDate: '2026-03-27', isTBD: false, status: 'done', eng: ['Napat Maensathian'], satDone: true, satDate: '2026-04-08', satSubmitted: '2026-04-08', poNo: 'PO-DOHOME-06', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '7', name: 'DoHome - Chiang Rai', qty: 2, province: 'เชียงราย', planDate: '2026-03-18', actualDate: '2026-04-02', isTBD: false, status: 'done', eng: ['Narongrit Taprasan', 'Praphot Auisakul'], satDone: true, satDate: '2026-04-16', satSubmitted: '2026-04-16', poNo: 'PO-DOHOME-07', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '8', name: 'DoHome - Head Quarter', qty: 8, province: 'กรุงเทพฯ', planDate: '2026-03-20', actualDate: '2026-03-31', isTBD: false, status: 'done', eng: ['Praphot Auisakul', 'Narongrit Taprasan'], satDone: true, satDate: '2026-04-16', satSubmitted: '2026-04-16', poNo: 'PO-DOHOME-08', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '9', name: 'DoHome - Surat Thani', qty: 4, province: 'สุราษฎร์ธานี', planDate: '2026-03-25', actualDate: '2026-03-17', isTBD: false, status: 'done', eng: ['Praphot Auisakul'], satDone: true, satDate: '2026-04-16', satSubmitted: '2026-04-16', poNo: 'PO-DOHOME-09', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '10', name: 'DoHome - Hat Yai', qty: 4, province: 'สงขลา', planDate: '2026-03-25', actualDate: '2026-03-24', isTBD: false, status: 'done', eng: ['Narongrit Taprasan'], satDone: true, satDate: '2026-05-06', satSubmitted: '2026-05-06', poNo: 'PO-DOHOME-10', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '11', name: 'DoHome - Pitsanulok', qty: 4, province: 'พิษณุโลก', planDate: '2026-03-26', actualDate: '2026-04-07', isTBD: false, status: 'done', eng: ['Narongrit Taprasan'], satDone: true, satDate: '2026-04-16', satSubmitted: '2026-04-16', poNo: 'PO-DOHOME-11', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '12', name: 'DoHome - Chaiyaphum', qty: 3, province: 'ชัยภูมิ', planDate: '2026-03-25', actualDate: '2026-04-09', isTBD: false, status: 'done', eng: ['Sukran Maming', 'Praphot Auisakul'], satDone: true, satDate: '2026-04-16', satSubmitted: '2026-04-16', poNo: 'PO-DOHOME-12', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '13', name: 'DoHome - Surin', qty: 4, province: 'สุรินทร์', planDate: '2026-03-30', actualDate: '2026-04-22', isTBD: false, status: 'done', eng: ['Narongrit Taprasan'], satDone: true, satDate: '2026-04-30', satSubmitted: '2026-04-30', poNo: 'PO-DOHOME-13', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '14', name: 'DoHome - Leam Chabang', qty: 3, province: 'ชลบุรี', planDate: '2026-03-30', actualDate: '2026-04-08', isTBD: false, status: 'done', eng: ['Narongrit Taprasan'], satDone: true, satDate: '2026-04-16', satSubmitted: '2026-04-16', poNo: 'PO-DOHOME-14', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '15', name: 'DoHome - Maptaput', qty: 4, province: 'ระยอง', planDate: '2026-03-30', actualDate: '2026-04-28', isTBD: false, status: 'done', eng: ['Praphot Auisakul'], satDone: true, satDate: '2026-05-06', satSubmitted: '2026-05-06', poNo: 'PO-DOHOME-15', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '17', name: 'GTI (Ajinomoto)', qty: 1, province: 'อยุธยา', planDate: '2026-04-24', actualDate: '2026-05-08', isTBD: false, status: 'done', eng: ['Sukran Maming'], satDone: true, satDate: '2026-05-25', satSubmitted: '2026-05-25', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '18', name: 'NPE (พงษ์จิตร)', qty: 2, province: 'กรุงเทพฯ', planDate: '2026-06-29', actualDate: '2026-04-27', isTBD: false, status: 'done', eng: ['Narongrit Taprasan', 'Praphot Auisakul'], satDone: true, satDate: '2026-07-06', satSubmitted: '2026-07-06', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '19', name: 'SPCG', qty: 2, province: 'ระยอง', planDate: '2026-04-20', actualDate: '2026-04-22', isTBD: false, status: 'done', eng: ['Sukran Maming', 'Napat Maensathian'], satDone: true, satDate: '2026-05-11', satSubmitted: '2026-05-11', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '20', name: 'soalr touch', qty: 0, province: '-', planDate: '', actualDate: '2026-09-22', isTBD: true, status: 'done', eng: [], satDone: true, satDate: '2026-09-22', satSubmitted: '2026-09-22', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '21', name: 'Greenyellow (Robinson) chachoengsao', qty: 2, province: 'ฉะเชิงเทรา', planDate: '2026-04-21', actualDate: '2026-04-21', isTBD: false, status: 'done', eng: ['Narongrit Taprasan', 'Napat Maensathian'], satDone: true, satDate: '2026-04-27', satSubmitted: '2026-04-27', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '22', name: 'EV Power (Fasonic)', qty: 2, province: 'ลำพูน', planDate: '2025-11-18', actualDate: '2025-11-18', isTBD: false, status: 'done', eng: ['Narongrit Taprasan', 'Praphot Auisakul'], satDone: true, satDate: '2025-11-20', satSubmitted: '2025-11-20', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '23', name: 'JJ-Lapp', qty: 1, province: 'ระยอง', planDate: '2026-02-10', actualDate: '2026-02-10', isTBD: false, status: 'done', eng: ['Sukran Maming', 'Praphot Auisakul'], satDone: true, satDate: '2026-02-24', satSubmitted: '2026-02-24', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '24', name: 'SIS', qty: 1, province: 'ปัตตานี', planDate: '2025-12-01', actualDate: '2025-12-01', isTBD: false, status: 'done', eng: ['Sukran Maming'], satDone: true, satDate: '2025-12-08', satSubmitted: '2025-12-08', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '25', name: 'ZTE CPF (KMK)', qty: 2, province: 'ปราจีนบุรี', planDate: '2025-11-30', actualDate: '2025-11-30', isTBD: false, status: 'done', eng: ['Narongrit Taprasan'], satDone: true, satDate: '2026-01-27', satSubmitted: '2026-01-27', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '26', name: 'ZTE CPF (KKN)', qty: 3, province: 'ขอนแก่น', planDate: '2025-12-01', actualDate: '2025-12-01', isTBD: false, status: 'done', eng: ['Narongrit Taprasan'], satDone: true, satDate: '2026-01-27', satSubmitted: '2026-01-27', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '27', name: 'ZTE CPF (SSK)', qty: 3, province: 'ศรีสะเกษ', planDate: '2025-12-02', actualDate: '2025-12-02', isTBD: false, status: 'done', eng: ['Narongrit Taprasan'], satDone: true, satDate: '2026-01-27', satSubmitted: '2026-01-27', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '28', name: 'Tako Cleantech', qty: 1, province: 'สระบุรี', planDate: '2026-04-09', actualDate: '2026-04-09', isTBD: false, status: 'done', eng: ['Narongrit Taprasan'], satDone: true, satDate: '2026-04-16', satSubmitted: '2026-04-16', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '29', name: 'PM Solar', qty: 0, province: 'เลย', planDate: '', actualDate: '', isTBD: true, status: 'pending', eng: [], satDone: false, satDate: '', satSubmitted: '', step1: true, step2: false, step3: false, step4: false, step5: false },
+      { id: '30', name: 'Energy Green Plus', qty: 1, province: 'นครราชสีมา', planDate: '2026-04-29', actualDate: '2026-04-29', isTBD: false, status: 'done', eng: ['Praphot Auisakul', 'Napat Maensathian'], satDone: false, satDate: '2026-05-06', satSubmitted: '', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '32', name: 'Triple one farm (Cooper)', qty: 6, province: '-', planDate: '', actualDate: '2026-05-22', isTBD: true, status: 'done', eng: ['Narongrit Taprasan', 'Praphot Auisakul'], satDone: true, satDate: '2026-06-02', satSubmitted: '2026-06-02', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '33', name: 'อังกฤษตรางู (ETE)', qty: 2, province: 'สมุทรปราการ', planDate: '', actualDate: '', isTBD: true, status: 'pending', eng: [], satDone: false, satDate: '', satSubmitted: '', step1: true, step2: false, step3: false, step4: false, step5: false },
+      { id: '34', name: 'QTC 241kWh', qty: 2, province: 'เชียงราย', planDate: '', actualDate: '2026-06-16', isTBD: true, status: 'done', eng: ['Napat Maensathian'], satDone: true, satDate: '2026-09-22', satSubmitted: '2026-09-22', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '35', name: 'กิจกำจายเรสิเด้นท์ (Energy DD)', qty: 1, province: '-', planDate: '', actualDate: '', isTBD: true, status: 'pending', eng: [], satDone: false, satDate: '', satSubmitted: '', step1: true, step2: false, step3: false, step4: false, step5: false },
+      { id: '36', name: 'Robinson ชลบุรี', qty: 2, province: 'ชลบุรี', planDate: '2026-06-10', actualDate: '2026-06-10', isTBD: false, status: 'done', eng: ['Praphot Auisakul'], satDone: true, satDate: '2026-07-06', satSubmitted: '2026-07-06', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '37', name: 'Eastern chinaware3', qty: 9, province: 'สมุทรปราการ', planDate: '2026-06-11', actualDate: '2026-06-11', isTBD: false, status: 'done', eng: ['Narongrit Taprasan', 'Praphot Auisakul'], satDone: true, satDate: '2026-07-06', satSubmitted: '2026-07-06', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '38', name: 'Take Time', qty: 1, province: 'นครปฐม', planDate: '2026-07-09', actualDate: '2026-07-09', isTBD: false, status: 'done', eng: ['Napat Maensathian'], satDone: false, satDate: '2026-07-16', satSubmitted: '', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '39', name: 'Haco x Ucop', qty: 1, province: 'สระบุรี', planDate: '2026-07-31', actualDate: '2026-07-31', isTBD: false, status: 'done', eng: ['Praphot Auisakul'], satDone: false, satDate: '2026-08-07', satSubmitted: '', step1: true, step2: true, step3: true, step4: true, step5: true },
+      { id: '41', name: 'Robinson srisamarn', qty: 2, province: 'นนทบุรี', planDate: '', actualDate: '', isTBD: true, status: 'pending', eng: [], satDone: false, satDate: '', satSubmitted: '', step1: true, step2: false, step3: false, step4: false, step5: false },
+      { id: '42', name: 'Haco- งาน ศุขภานุวัฒน์', qty: 1, province: '-', planDate: '', actualDate: '', isTBD: true, status: 'pending', eng: [], satDone: false, satDate: '', satSubmitted: '2026-09-17', step1: true, step2: false, step3: false, step4: false, step5: false },
+      { id: '43', name: 'Union Polymer (GTI)', qty: 1, province: 'สมุทรสาคร', planDate: '', actualDate: '', isTBD: true, status: 'pending', eng: [], satDone: false, satDate: '', satSubmitted: '2026-09-17', step1: true, step2: false, step3: false, step4: false, step5: false },
+      { id: '16', name: 'Taketime', qty: 1, province: '-', planDate: '', actualDate: '', isTBD: true, status: 'pending', eng: [], satDone: false, satDate: '', satSubmitted: '', step1: true, step2: false, step3: false, step4: false, step5: false },
+      { id: '44', name: 'taketime (ปิยทัศน์ ฟาร์ม)', qty: 2, province: '-', planDate: '', actualDate: '', isTBD: true, status: 'pending', eng: [], satDone: false, satDate: '', satSubmitted: '', step1: true, step2: false, step3: false, step4: false, step5: false },
+      { id: '45', name: 'QTC (พิษณุโลก)', qty: 1, province: '-', planDate: '', actualDate: '', isTBD: true, status: 'pending', eng: [], satDone: false, satDate: '', satSubmitted: '', step1: true, step2: false, step3: false, step4: false, step5: false },
+      { id: '46', name: 'Neo Clean (บริษัท สยาม คอมเมอร์เชียล ซีพอร์ท)', qty: 6, province: 'ชลบุรี', planDate: '', actualDate: '', isTBD: true, status: 'pending', eng: [], satDone: false, satDate: '', satSubmitted: '', step1: true, step2: false, step3: false, step4: false, step5: false },
+      { id: '47', name: 'MDS', qty: 2, province: '-', planDate: '', actualDate: '', isTBD: true, status: 'pending', eng: [], satDone: false, satDate: '', satSubmitted: '', step1: true, step2: false, step3: false, step4: false, step5: false },
+      { id: '48', name: 'Neo Clean(บริษัท พริ้นติ้ง โซลูชั่น จำกัด)', qty: 2, province: 'ฉะเชิงเทรา', planDate: '', actualDate: '', isTBD: true, status: 'pending', eng: [], satDone: false, satDate: '', satSubmitted: '', step1: true, step2: false, step3: false, step4: false, step5: false },
+      { id: '49', name: 'จิปเอนเนอร์ยี (3009/26)', qty: 1, province: '-', planDate: '', actualDate: '', isTBD: true, status: 'pending', eng: [], satDone: false, satDate: '', satSubmitted: '', step1: true, step2: false, step3: false, step4: false, step5: false }
+    ];
+
+    let projects = [...INITIAL_PROJECTS];
+    let filteredProjects = [...projects];
+    let activeTab = 'step';
+
+    // Initialize Application
+    window.addEventListener('DOMContentLoaded', async () => {
+      document.getElementById('printDateStr').innerText = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+      initLocalOrCloudStore();
+      setupFirebase();
+    });
+
+    // Local Storage & Cloud Sync Setup
+    function initLocalOrCloudStore() {
+      const saved = localStorage.getItem('ess_projects_data_v7');
+      if (saved) {
+        try {
+          projects = JSON.parse(saved);
+        } catch(e) {
+          console.error("Localstorage parse error", e);
+        }
+      } else {
+        localStorage.setItem('ess_projects_data_v7', JSON.stringify(INITIAL_PROJECTS));
+      }
+      applyFilters();
+    }
+
+    async function setupFirebase() {
+      if (typeof __firebase_config === 'undefined') {
+        updateCloudStatus(false, 'Local Storage Mode');
+        return;
+      }
+      try {
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            currentUser = user;
+            subscribeToFirestore();
+          }
+        });
+      } catch (err) {
+        console.warn("Firebase Init fallback to Local Storage:", err);
+        updateCloudStatus(false, 'Local Mode');
+      }
+    }
+
+    function subscribeToFirestore() {
+      if (!db || !currentUser) return;
+      const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'projects');
+
+      onSnapshot(colRef, async (snapshot) => {
+        if (snapshot.empty) {
+          // Seed database with all 47 projects
+          const batch = writeBatch(db);
+          INITIAL_PROJECTS.forEach((p) => {
+            const pRef = doc(db, 'artifacts', appId, 'public', 'data', 'projects', p.id);
+            batch.set(pRef, p);
+          });
+          await batch.commit();
+          updateCloudStatus(true, 'Cloud Synced');
+          return;
+        }
+
+        const cloudData = [];
+        snapshot.forEach((docSnap) => {
+          cloudData.push(docSnap.data());
+        });
+
+        projects = cloudData.sort((a, b) => parseInt(a.id) - parseInt(b.id));
+        localStorage.setItem('ess_projects_data_v7', JSON.stringify(projects));
+        updateCloudStatus(true, 'Cloud Synced');
+        applyFilters();
+      }, (error) => {
+        console.error("Firestore Listen Error:", error);
+        updateCloudStatus(false, 'Sync Offline');
+      });
+    }
+
+    function updateCloudStatus(synced, text) {
+      isCloudSynced = synced;
+      const dot = document.getElementById('cloudDot');
+      const txt = document.getElementById('cloudStatusText');
+      if (synced) {
+        dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse";
+        txt.innerText = text || "Cloud Synced";
+      } else {
+        dot.className = "w-2.5 h-2.5 rounded-full bg-amber-400";
+        txt.innerText = text || "Local Storage";
+      }
+    }
+
+    // TAB SWITCHING
+    window.switchTab = function(tab) {
+      activeTab = tab;
+      const btn1 = document.getElementById('tabBtn1');
+      const btn2 = document.getElementById('tabBtn2');
+      const content1 = document.getElementById('tabContent1');
+      const content2 = document.getElementById('tabContent2');
+
+      if (tab === 'step') {
+        btn1.className = "px-4 py-1.5 rounded-md text-sm font-semibold transition bg-indigo-900 text-white shadow-sm";
+        btn2.className = "px-4 py-1.5 rounded-md text-sm font-semibold transition text-gray-700 hover:bg-gray-200";
+        content1.classList.remove('hidden');
+        content2.classList.add('hidden');
+      } else {
+        btn2.className = "px-4 py-1.5 rounded-md text-sm font-semibold transition bg-indigo-900 text-white shadow-sm";
+        btn1.className = "px-4 py-1.5 rounded-md text-sm font-semibold transition text-gray-700 hover:bg-gray-200";
+        content2.classList.remove('hidden');
+        content1.classList.add('hidden');
+      }
+    }
+
+    // FILTER & SEARCH LOGIC
+    window.applyFilters = function() {
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      const statusF = document.getElementById('statusFilter').value;
+      const engF = document.getElementById('engineerFilter').value;
+
+      filteredProjects = projects.filter(p => {
+        // Text Search
+        const matchSearch = !q || (p.name && p.name.toLowerCase().includes(q)) || 
+                                  (p.province && p.province.toLowerCase().includes(q)) ||
+                                  (p.poNo && p.poNo.toLowerCase().includes(q));
+
+        // Status Filter
+        let matchStatus = true;
+        if (statusF === 'done') matchStatus = (p.status === 'done');
+        else if (statusF === 'pending') matchStatus = (p.status === 'pending');
+        else if (statusF === 'sat_pending') matchStatus = (!p.satDone && p.status === 'done');
+        else if (statusF === 'sat_done') matchStatus = (p.satDone === true);
+
+        // Engineer Filter
+        let matchEng = true;
+        if (engF !== 'all') {
+          matchEng = p.eng && p.eng.includes(engF);
+        }
+
+        return matchSearch && matchStatus && matchEng;
+      });
+
+      renderAll();
+    }
+
+    window.resetFilters = function() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('statusFilter').value = 'all';
+      document.getElementById('engineerFilter').value = 'all';
+      applyFilters();
+    }
+
+    // RENDER FUNCTIONS
+    function renderAll() {
+      renderKPIs();
+      renderStepTable();
+      renderCommTable();
+    }
+
+    function renderKPIs() {
+      const totalProjects = projects.length;
+      const totalESS = projects.reduce((acc, p) => acc + (parseInt(p.qty) || 0), 0);
+      const commDone = projects.filter(p => p.status === 'done').length;
+      const satDone = projects.filter(p => p.satDone).length;
+
+      // Overdue SAT calculation
+      const todayStr = new Date().toISOString().split('T')[0];
+      const satOverdue = projects.filter(p => !p.satDone && p.satDate && p.satDate < todayStr && p.status === 'done').length;
+
+      const commDonePct = totalProjects ? Math.round((commDone / totalProjects) * 100) : 0;
+      const satDonePct = totalProjects ? Math.round((satDone / totalProjects) * 100) : 0;
+      const overallProgressPct = totalProjects ? Math.round(((commDone * 0.6 + satDone * 0.4) / totalProjects) * 100) : 0;
+
+      document.getElementById('kpiTotalProjects').innerText = totalProjects;
+      document.getElementById('kpiTotalESS').innerText = totalESS;
+      document.getElementById('kpiCommDone').innerText = commDone;
+      document.getElementById('kpiCommDonePercent').innerText = `${commDonePct}%`;
+      document.getElementById('kpiSatDone').innerText = satDone;
+      document.getElementById('kpiSatDonePercent').innerText = `${satDonePct}%`;
+      document.getElementById('kpiSatOverdue').innerText = satOverdue;
+      document.getElementById('kpiProgressBar').style.width = `${overallProgressPct}%`;
+      document.getElementById('kpiProgressText').innerText = `${overallProgressPct}%`;
+    }
+
+    function renderStepTable() {
+      const tbody = document.getElementById('stepTableBody');
+      if (filteredProjects.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-gray-500">ไม่พบข้อมูลโครงการตามเงื่อนไขที่เลือก</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filteredProjects.map((p, idx) => {
+        const isDone = p.status === 'done';
+        return `
+          <tr class="hover:bg-indigo-50/40 transition">
+            <td class="py-3 px-3 text-center font-mono text-sm text-gray-500">${idx + 1}</td>
+            <td class="py-3 px-4">
+              <div class="font-bold text-gray-900">${p.name}</div>
+              ${p.poNo ? `<div class="text-xs text-indigo-700 font-mono"><i class="fas fa-file-invoice mr-1"></i>${p.poNo}</div>` : ''}
+            </td>
+            <td class="py-3 px-3 text-center font-mono font-bold text-blue-800">${p.qty || 0}</td>
+            <td class="py-3 px-3 text-center text-sm">${p.province || '-'}</td>
+            
+            <!-- 5 Steps Flow Graphic -->
+            <td class="py-3 px-4">
+              <div class="flex items-center justify-between relative max-w-xs mx-auto">
+                <div class="absolute top-1/2 left-3 right-3 h-0.5 bg-gray-200 -z-0 -translate-y-1/2"></div>
+                
+                <!-- Step 1 -->
+                <div class="relative z-10 text-center" title="1. ได้รับ PO">
+                  <span class="step-badge ${p.step1 !== false ? 'done' : 'pending'}"><i class="fas ${p.step1 !== false ? 'fa-check' : 'fa-file'} text-xs"></i></span>
+                </div>
+                <!-- Step 2 -->
+                <div class="relative z-10 text-center" title="2. ส่งของ">
+                  <span class="step-badge ${p.step2 ? 'done' : 'pending'}"><i class="fas ${p.step2 ? 'fa-truck' : 'fa-box'} text-xs"></i></span>
+                </div>
+                <!-- Step 3 -->
+                <div class="relative z-10 text-center" title="3. Pre-Comm Training">
+                  <span class="step-badge ${p.step3 ? 'done' : 'pending'}"><i class="fas ${p.step3 ? 'fa-chalkboard-teacher' : 'fa-graduation-cap'} text-xs"></i></span>
+                </div>
+                <!-- Step 4 -->
+                <div class="relative z-10 text-center" title="4. Commissioning">
+                  <span class="step-badge ${p.step4 || isDone ? 'done' : 'pending'}"><i class="fas ${p.step4 || isDone ? 'fa-cogs' : 'fa-wrench'} text-xs"></i></span>
+                </div>
+                <!-- Step 5 -->
+                <div class="relative z-10 text-center" title="5. Onsite Training">
+                  <span class="step-badge ${p.step5 ? 'done' : 'pending'}"><i class="fas ${p.step5 ? 'fa-user-check' : 'fa-users'} text-xs"></i></span>
+                </div>
+              </div>
+            </td>
+
+            <!-- Current Status Badge -->
+            <td class="py-3 px-3 text-center">
+              ${isDone ? 
+                `<span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-300 inline-block"><i class="fas fa-check-circle mr-1"></i>เสร็จสิ้น</span>` : 
+                `<span class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold border border-amber-300 inline-block"><i class="fas fa-clock mr-1"></i>รอรำเนินการ</span>`
+              }
+            </td>
+
+            <!-- Actions -->
+            <td class="py-3 px-3 text-center no-print">
+              <div class="flex items-center justify-center space-x-1">
+                <button onclick="openEditModal('${p.id}')" class="p-1.5 text-indigo-600 hover:bg-indigo-100 rounded-md transition" title="แก้ไข">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button onclick="confirmDeleteProject('${p.id}')" class="p-1.5 text-red-600 hover:bg-red-100 rounded-md transition" title="ลบ">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderCommTable() {
+      const tbody = document.getElementById('commTableBody');
+      if (filteredProjects.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="11" class="py-8 text-center text-gray-500">ไม่พบข้อมูลตามเงื่อนไขที่เลือก</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filteredProjects.map((p, idx) => {
+        const isDone = p.status === 'done';
+        const engList = (p.eng && p.eng.length > 0) ? p.eng.join(', ') : '-';
+
+        let satStatusBadge = '';
+        if (p.satDone) {
+          satStatusBadge = `<span class="px-2 py-0.5 bg-purple-100 text-purple-800 rounded text-xs font-semibold border border-purple-300"><i class="fas fa-file-check mr-1"></i>ส่งแล้ว</span>`;
+        } else if (p.satDate) {
+          const today = new Date().toISOString().split('T')[0];
+          if (p.satDate < today && isDone) {
+            satStatusBadge = `<span class="px-2 py-0.5 bg-red-100 text-red-800 rounded text-xs font-semibold border border-red-300 animate-pulse"><i class="fas fa-exclamation-circle mr-1"></i>เกินกำหนด</span>`;
+          } else {
+            satStatusBadge = `<span class="px-2 py-0.5 bg-amber-100 text-amber-800 rounded text-xs font-semibold border border-amber-300"><i class="fas fa-hourglass-half mr-1"></i>รอส่ง</span>`;
+          }
+        } else {
+          satStatusBadge = `<span class="text-xs text-gray-400">-</span>`;
+        }
+
+        return `
+          <tr class="hover:bg-indigo-50/40 transition">
+            <td class="py-3 px-3 text-center font-mono text-sm text-gray-500">${idx + 1}</td>
+            <td class="py-3 px-4 font-bold text-gray-900">${p.name}</td>
+            <td class="py-3 px-3 text-center font-mono font-bold text-blue-800">${p.qty || 0}</td>
+            <td class="py-3 px-3 text-center font-mono text-xs">${p.isTBD ? '<span class="px-2 py-0.5 bg-gray-200 text-gray-700 rounded">TBD</span>' : (p.planDate || '-')}</td>
+            <td class="py-3 px-3 text-center font-mono text-xs text-emerald-700 font-semibold">${p.actualDate || '-'}</td>
+            <td class="py-3 px-3 text-center">
+              ${isDone ? '<span class="text-xs px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold rounded">Done</span>' : '<span class="text-xs px-2 py-0.5 bg-amber-100 text-amber-800 font-bold rounded">Pending</span>'}
+            </td>
+            <td class="py-3 px-4 text-xs text-gray-700">${engList}</td>
+            <td class="py-3 px-3 text-center font-mono text-xs">${p.satDate || '-'}</td>
+            <td class="py-3 px-3 text-center font-mono text-xs text-purple-700 font-semibold">${p.satSubmitted || '-'}</td>
+            <td class="py-3 px-3 text-center">${satStatusBadge}</td>
+            <td class="py-3 px-3 text-center no-print">
+              <button onclick="openEditModal('${p.id}')" class="p-1.5 text-indigo-600 hover:bg-indigo-100 rounded-md transition">
+                <i class="fas fa-edit"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // AUTO CALCULATE SAT DUE DATE (Comm Actual/Plan + 7 days)
+    window.autoCalcSATDue = function() {
+      const planD = document.getElementById('formPlanDate').value;
+      const actualD = document.getElementById('formActualDate').value;
+      const baseD = actualD || planD;
+      
+      if (baseD) {
+        const d = new Date(baseD);
+        d.setDate(d.getDate() + 7);
+        document.getElementById('formSatDue').value = d.toISOString().split('T')[0];
+      }
+    }
+
+    window.toggleTBDInput = function() {
+      const isTBD = document.getElementById('formIsTBD').checked;
+      const planInput = document.getElementById('formPlanDate');
+      if (isTBD) {
+        planInput.value = '';
+        planInput.disabled = true;
+      } else {
+        planInput.disabled = false;
+      }
+    }
+
+    // MODAL HANDLERS
+    window.openAddModal = function() {
+      document.getElementById('modalTitle').innerText = 'เพิ่มโครงการใหม่';
+      document.getElementById('editProjectId').value = '';
+      document.getElementById('projectForm').reset();
+      document.getElementById('formIsTBD').checked = false;
+      document.getElementById('formPlanDate').disabled = false;
+      document.getElementById('formStep1').checked = true;
+      document.getElementById('projectModal').classList.remove('hidden');
+    }
+
+    window.openEditModal = function(id) {
+      const p = projects.find(item => item.id === String(id));
+      if (!p) return;
+
+      document.getElementById('modalTitle').innerText = 'แก้ไขข้อมูลโครงการ';
+      document.getElementById('editProjectId').value = p.id;
+      document.getElementById('formName').value = p.name || '';
+      document.getElementById('formProvince').value = p.province || '';
+      document.getElementById('formQty').value = p.qty || 0;
+      document.getElementById('formPoNo').value = p.poNo || '';
+      document.getElementById('formPoDate').value = p.poDate || '';
+
+      document.getElementById('formStep1').checked = p.step1 !== false;
+      document.getElementById('formStep2').checked = !!p.step2;
+      document.getElementById('formStep3').checked = !!p.step3;
+      document.getElementById('formStep4').checked = !!p.step4 || p.status === 'done';
+      document.getElementById('formStep5').checked = !!p.step5;
+
+      document.getElementById('formIsTBD').checked = !!p.isTBD;
+      document.getElementById('formPlanDate').value = p.planDate || '';
+      document.getElementById('formPlanDate').disabled = !!p.isTBD;
+      document.getElementById('formActualDate').value = p.actualDate || '';
+
+      // Engineers checkboxes
+      const engBoxes = document.querySelectorAll('input[name="engineers"]');
+      engBoxes.forEach(cb => {
+        cb.checked = p.eng && p.eng.includes(cb.value);
+      });
+
+      document.getElementById('formSatDue').value = p.satDate || '';
+      document.getElementById('formSatSubmitted').value = p.satSubmitted || '';
+
+      document.getElementById('projectModal').classList.remove('hidden');
+    }
+
+    window.closeModal = function() {
+      document.getElementById('projectModal').classList.add('hidden');
+    }
+
+    window.saveProjectForm = async function(e) {
+      e.preventDefault();
+      const id = document.getElementById('editProjectId').value || String(Date.now());
+      const name = document.getElementById('formName').value.trim();
+      const province = document.getElementById('formProvince').value.trim();
+      const qty = parseInt(document.getElementById('formQty').value) || 0;
+      const poNo = document.getElementById('formPoNo').value.trim();
+      const poDate = document.getElementById('formPoDate').value;
+
+      const step1 = document.getElementById('formStep1').checked;
+      const step2 = document.getElementById('formStep2').checked;
+      const step3 = document.getElementById('formStep3').checked;
+      const step4 = document.getElementById('formStep4').checked;
+      const step5 = document.getElementById('formStep5').checked;
+
+      const isTBD = document.getElementById('formIsTBD').checked;
+      const planDate = isTBD ? '' : document.getElementById('formPlanDate').value;
+      const actualDate = document.getElementById('formActualDate').value;
+
+      const eng = Array.from(document.querySelectorAll('input[name="engineers"]:checked')).map(cb => cb.value);
+
+      const satDate = document.getElementById('formSatDue').value;
+      const satSubmitted = document.getElementById('formSatSubmitted').value;
+      const satDone = !!satSubmitted;
+      const status = (actualDate || step4) ? 'done' : 'pending';
+
+      const projectData = {
+        id, name, qty, province, poNo, poDate,
+        step1, step2, step3, step4, step5,
+        isTBD, planDate, actualDate, eng,
+        satDate, satSubmitted, satDone, status
+      };
+
+      // Save locally first
+      const existingIdx = projects.findIndex(p => p.id === id);
+      if (existingIdx >= 0) {
+        projects[existingIdx] = projectData;
+      } else {
+        projects.push(projectData);
+      }
+      localStorage.setItem('ess_projects_data_v7', JSON.stringify(projects));
+      applyFilters();
+      closeModal();
+      showToast("บันทึกข้อมูลโครงการเรียบร้อยแล้ว", "success");
+
+      // Save to Firebase Cloud
+      if (db && currentUser) {
+        try {
+          const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'projects', id);
+          await setDoc(docRef, projectData, { merge: true });
+        } catch(err) {
+          console.error("Firestore Save Error:", err);
+        }
+      }
+    }
+
+    // CONFIRM DELETE MODAL
+    let pendingDeleteId = null;
+    window.confirmDeleteProject = function(id) {
+      pendingDeleteId = id;
+      const p = projects.find(item => item.id === String(id));
+      document.getElementById('confirmMessage').innerText = `คุณต้องการลบโครงการ "${p ? p.name : ''}" ใช่หรือไม่?`;
+      document.getElementById('confirmModal').classList.remove('hidden');
+    }
+
+    window.closeConfirmModal = async function(confirmed) {
+      document.getElementById('confirmModal').classList.add('hidden');
+      if (confirmed && pendingDeleteId) {
+        projects = projects.filter(p => p.id !== pendingDeleteId);
+        localStorage.setItem('ess_projects_data_v7', JSON.stringify(projects));
+        applyFilters();
+
+        if (db && currentUser) {
+          try {
+            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'projects', pendingDeleteId);
+            await deleteDoc(docRef);
+          } catch(err) {
+            console.error("Firestore Delete Error:", err);
+          }
+        }
+        showToast("ลบโครงการเรียบร้อยแล้ว", "error");
+      }
+      pendingDeleteId = null;
+    }
+
+    // TOAST NOTIFICATIONS
+    function showToast(msg, type = "info") {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      const colorClass = type === 'success' ? 'bg-emerald-800 text-white' : (type === 'error' ? 'bg-red-800 text-white' : 'bg-indigo-900 text-white');
+      toast.className = `px-4 py-3 rounded-xl shadow-xl text-sm font-semibold flex items-center space-x-2 transition-all duration-300 pointer-events-auto ${colorClass}`;
+      toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i><span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // EXPORT HANDLERS
+    window.exportExcel = function() {
+      if (typeof XLSX === 'undefined') {
+        showToast("ไม่พบไลบรารี SheetJS สำหรับการสร้างไฟล์ Excel", "error");
+        return;
+      }
+
+      const wb = XLSX.utils.book_new();
+
+      // Sheet 1: Summary KPI
+      const summaryData = [
+        ["POLYTECHNOLOGY CO., LTD."],
+        ["ESS Project Workflow & Commissioning Plan - Summary Report"],
+        ["Document No:", "BESS-COMM-2026", "Revision:", "07"],
+        ["Export Date:", new Date().toLocaleDateString('th-TH')],
+        [],
+        ["KPI Metric", "Value"],
+        ["Total Projects", projects.length],
+        ["Total ESS Units", projects.reduce((a, p) => a + (parseInt(p.qty) || 0), 0)],
+        ["Commissioning Completed", projects.filter(p => p.status === 'done').length],
+        ["SAT Report Submitted", projects.filter(p => p.satDone).length]
+      ];
+      const wsSummary = XLSX.utils.aoa_to_sheet(summaryData);
+      XLSX.utils.book_append_sheet(wb, wsSummary, "Summary");
+
+      // Sheet 2: Commissioning Plan
+      const commRows = projects.map((p, idx) => ({
+        "No": idx + 1,
+        "Project Name": p.name,
+        "ESS Qty": p.qty,
+        "Province": p.province,
+        "Plan Date": p.isTBD ? "TBD" : (p.planDate || ""),
+        "Actual Date": p.actualDate || "",
+        "Status": p.status,
+        "Engineers": (p.eng || []).join(", ")
+      }));
+      const wsComm = XLSX.utils.json_to_sheet(commRows);
+      XLSX.utils.book_append_sheet(wb, wsComm, "Commissioning Plan");
+
+      // Sheet 3: SAT Tracking Report
+      const satRows = projects.map((p, idx) => ({
+        "No": idx + 1,
+        "Project Name": p.name,
+        "Status": p.status,
+        "SAT Due Date": p.satDate || "",
+        "SAT Submitted Date": p.satSubmitted || "",
+        "SAT Status": p.satDone ? "Submitted" : "Pending"
+      }));
+      const wsSat = XLSX.utils.json_to_sheet(satRows);
+      XLSX.utils.book_append_sheet(wb, wsSat, "SAT Report");
+
+      XLSX.writeFile(wb, `ESS_Commissioning_Plan_Rev07_${new Date().toISOString().split('T')[0]}.xlsx`);
+      showToast("ส่งออกไฟล์ Excel สำเร็จ", "success");
+    }
+
+    window.exportCSV = function() {
+      let csvContent = "\uFEFF"; // UTF-8 BOM
+      csvContent += "No,Project Name,ESS Qty,Province,Plan Date,Actual Date,Status,Engineers,SAT Due,SAT Submitted\n";
+
+      projects.forEach((p, idx) => {
+        const engStr = `"${(p.eng || []).join("; ")}"`;
+        const nameStr = `"${p.name.replace(/"/g, '""')}"`;
+        csvContent += `${idx + 1},${nameStr},${p.qty},${p.province || ''},${p.isTBD ? 'TBD' : p.planDate || ''},${p.actualDate || ''},${p.status},${engStr},${p.satDate || ''},${p.satSubmitted || ''}\n`;
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `ESS_Workflow_Report_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast("ส่งออกไฟล์ CSV เรียบร้อยแล้ว", "success");
+    }
+
+    window.exportWord = function() {
+      // Inline SVG string for Word export embedding
+      const logoSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="65 170 870 715" width="120" height="90"><rect x="166" y="201" width="646" height="534" rx="108" ry="108" fill="#ffffff" stroke="#28067E" stroke-width="20"/><rect x="238" y="281" width="514" height="67" fill="#28067E"/><rect x="474" y="256" width="67" height="114" fill="#28067E"/><rect x="474" y="392" width="67" height="138" fill="#28067E"/><path d="M 474 528 A 139 139 0 0 0 752 528 L 685 528 A 72 72 0 0 1 541 528 Z" fill="#28067E"/><rect x="238" y="528" width="65" height="140" fill="#28067E"/><path fill-rule="evenodd" d="M 372 393 A 135 135 0 1 0 372 663 A 135 135 0 1 0 372 393 Z M 372 457 A 71 71 0 1 1 372 599 A 71 71 0 1 1 372 457 Z" fill="#28067E"/><text x="500" y="845" text-anchor="middle" fill="#28067E" font-family="sans-serif" font-size="80" font-weight="600">polytechnology co.,ltd.</text></svg>`;
+
+      let wordHTML = `
+        <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+        <head>
+          <meta charset='utf-8'>
+          <title>ESS Commissioning Plan Word Export</title>
+          <style>
+            @page { size: landscape; margin: 1in; }
+            body { font-family: 'TH Sarabun New', 'Sarabun', sans-serif; font-size: 16pt; }
+            table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+            th, td { border: 1px solid #1e1b4b; padding: 6px; text-align: left; }
+            th { background-color: #1e1b4b; color: white; }
+          </style>
+        </head>
+        <body>
+          <table style="border:none; width:100%; margin-bottom: 20px;">
+            <tr style="border:none;">
+              <td style="border:none; width: 130px;">${logoSvg}</td>
+              <td style="border:none;">
+                <h2 style="margin:0; color:#1e1b4b;">ESS Project Workflow & Commissioning Plan</h2>
+                <p style="margin:0; font-size:14pt; color:#475569;">Document No: BESS-COMM-2026 | Rev. 07 | POLYTECHNOLOGY CO., LTD.</p>
+              </td>
+            </tr>
+          </table>
+
+          <h3>ตารางติดตามแผนงาน Commissioning (ทั้งหมด ${projects.length} โครงการ)</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>ชื่อโครงการ</th>
+                <th>ESS Qty</th>
+                <th>จังหวัด</th>
+                <th>Plan Date</th>
+                <th>Actual Date</th>
+                <th>สถานะ Comm</th>
+                <th>วิศวกรผู้รับผิดชอบ</th>
+                <th>กำหนดส่ง SAT</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${projects.map((p, i) => `
+                <tr>
+                  <td>${i + 1}</td>
+                  <td><b>${p.name}</b></td>
+                  <td>${p.qty}</td>
+                  <td>${p.province || '-'}</td>
+                  <td>${p.isTBD ? 'TBD' : (p.planDate || '-')}</td>
+                  <td>${p.actualDate || '-'}</td>
+                  <td>${p.status}</td>
+                  <td>${(p.eng || []).join(', ')}</td>
+                  <td>${p.satDate || '-'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </body>
+        </html>
+      `;
+
+      const blob = new Blob(['\ufeff', wordHTML], { type: 'application/msword' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ESS_Commissioning_Plan_Report_${new Date().toISOString().split('T')[0]}.doc`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast("สร้างเอกสาร Word (.doc) สำเร็จ", "success");
+    }
+
+    window.saveHTMLState = function() {
+      const htmlContent = document.documentElement.outerHTML;
+      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `BESS-COMM-2026_Rev07_Polytechnology_${new Date().toISOString().split('T')[0]}.html`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast("บันทึกไฟล์ HTML สมบูรณ์แล้ว", "success");
+    }
+
+    window.triggerFileInput = function() {
+      document.getElementById('htmlFileInput').click();
+    }
+
+    window.importHTMLState = function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        showToast("กำลังอ่านข้อมูลจากไฟล์ HTML...", "info");
+        setTimeout(() => {
+          location.reload();
+        }, 1000);
+      };
+      reader.readAsText(file);
+    }
+
+    // Modal Info Display
+    window.toggleCloudSyncModal = function() {
+      showToast(isCloudSynced ? "เชื่อมต่อคลาวด์เรียบร้อย (Firestore Sync)" : "ใช้งานในโหมด Local Storage", isCloudSynced ? "success" : "info");
+    }
+
+    // Keyboard Shortcuts (Ctrl+S, Ctrl+L)
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        saveHTMLState();
+      }
+    });
+  </script>
+</body>
+</html>
