@@ -579,6 +579,7 @@
         // App State
         let db = null;
         let isCloudOnline = false;
+        let isCloudReady = false;
         let projects = [];
         let currentTab = 'workflow';
         const STORAGE_KEY = 'ess_sat_plan_v7';
@@ -666,6 +667,7 @@
 
         // Initialize Firebase Sync Logic
         async function initFirebase() {
+            isCloudReady = false;
             const syncDot = document.getElementById('syncDot');
             const syncText = document.getElementById('syncText');
 
@@ -680,10 +682,10 @@
                 // Firestore Realtime Listener
                 onSnapshot(colRef, async (snapshot) => {
                     isCloudOnline = true;
-                    syncDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
-                    syncText.innerText = 'Cloud Synced';
 
                     if (snapshot.empty) {
+                        syncDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse';
+                        syncText.innerText = 'Preparing Cloud...';
                         // Seed Initial Projects into Firestore if empty
                         console.log('Seeding initial projects to Firestore...');
                         const batch = writeBatch(db);
@@ -691,8 +693,13 @@
                             const ref = doc(db, 'ess_projects', String(p.id));
                             batch.set(ref, p);
                         });
-                        await batch.commit();
-                        window.showToast('เชื่อมต่อ Cloud ครั้งแรก! ทำการสร้างข้อมูลเริ่มต้นเรียบร้อยแล้ว', 'success');
+                        try {
+                            await batch.commit();
+                            window.showToast('เชื่อมต่อ Cloud ครั้งแรก! ทำการสร้างข้อมูลเริ่มต้นเรียบร้อยแล้ว', 'success');
+                        } catch (err) {
+                            console.error("Firestore Seed Failed:", err);
+                            fallbackToLocal("Cloud Seed Failed");
+                        }
                     } else {
                         const cloudProjects = [];
                         snapshot.forEach(docSnap => {
@@ -701,6 +708,9 @@
                         // Sort by ID
                         cloudProjects.sort((a, b) => Number(a.id) - Number(b.id));
                         projects = cloudProjects;
+                        isCloudReady = true;
+                        syncDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
+                        syncText.innerText = 'Cloud Synced';
                         saveToLocalStorage(projects);
                         window.renderTables();
                     }
@@ -717,6 +727,7 @@
 
         function fallbackToLocal(reason) {
             isCloudOnline = false;
+            isCloudReady = true;
             document.getElementById('syncDot').className = 'w-2.5 h-2.5 rounded-full bg-amber-400';
             document.getElementById('syncText').innerText = 'Local Mode';
             window.showToast(`ใช้งานในโหมด Local Backup (${reason})`, 'info');
@@ -743,6 +754,19 @@
 
         // Write Project to Cloud & Local
         async function syncSaveProject(proj) {
+            if (!isCloudReady) return 'not-ready';
+
+            const saveToCloud = isCloudOnline && Boolean(db);
+            if (saveToCloud) {
+                try {
+                    await setDoc(doc(db, 'ess_projects', String(proj.id)), proj);
+                } catch (err) {
+                    console.error("Cloud Save Failed:", err);
+                    window.showToast("ไม่สามารถบันทึกลง Cloud ได้ กรุณาลองอีกครั้ง", "error");
+                    return 'error';
+                }
+            }
+
             // Update local state array
             const idx = projects.findIndex(p => String(p.id) === String(proj.id));
             if (idx >= 0) {
@@ -753,14 +777,7 @@
             saveToLocalStorage(projects);
             window.renderTables();
 
-            if (isCloudOnline && db) {
-                try {
-                    await setDoc(doc(db, 'ess_projects', String(proj.id)), proj);
-                } catch (err) {
-                    console.error("Cloud Save Failed:", err);
-                    window.showToast("ไม่สามารถบันทึกลง Cloud ได้ (กรุณาตรวจ Firestore Rules)", "error");
-                }
-            }
+            return saveToCloud ? 'cloud' : 'local';
         }
 
         // Delete Project from Cloud & Local
@@ -860,8 +877,6 @@
                     const mo = parseInt(parts[1], 10);
                     if (filterYear !== 'all' && yr !== filterYear) return false;
                     if (filterMonth !== 'all' && mo !== parseInt(filterMonth, 10)) return false;
-                } else if (filterYear !== 'all' || filterMonth !== 'all') {
-                    return false;
                 }
 
                 return true;
@@ -1155,6 +1170,11 @@
 
         // Open Add Modal
         window.openAddModal = function() {
+            if (!isCloudReady) {
+                window.showToast('กำลังโหลดข้อมูล กรุณารอสักครู่แล้วลองใหม่', 'info');
+                return;
+            }
+
             document.getElementById('modalProjectTitle').innerText = 'เพิ่มโปรเจกต์ใหม่ (Add Project)';
             document.getElementById('formProject').reset();
             document.getElementById('fieldId').value = '';
@@ -1215,57 +1235,83 @@
         };
 
         // Save Form Submit
-        window.saveProjectForm = function(e) {
+        window.saveProjectForm = async function(e) {
             e.preventDefault();
-            const idVal = document.getElementById('fieldId').value;
-            const isEdit = Boolean(idVal);
+            const submitButton = document.querySelector('#formProject button[type="submit"]');
+            if (submitButton && submitButton.disabled) return;
+            if (submitButton) submitButton.disabled = true;
 
-            const isTbd = document.getElementById('fieldIsTbd').checked;
-            const dateVal = isTbd ? 'TBD' : document.getElementById('fieldDate').value;
+            try {
+                if (!isCloudReady) {
+                    window.showToast('กำลังโหลดข้อมูล กรุณารอสักครู่แล้วลองบันทึกใหม่', 'info');
+                    return;
+                }
 
-            // Selected Engineers
-            const selectedEngs = [];
-            document.querySelectorAll('input[name="commPersons"]:checked').forEach(cb => {
-                selectedEngs.push(cb.value);
-            });
+                const idVal = document.getElementById('fieldId').value;
+                const isEdit = Boolean(idVal);
 
-            const doneVal = document.getElementById('fieldDone').checked;
-            const satSubVal = document.getElementById('fieldSatSubmitted').value;
-            const stepOnsiteVal = document.getElementById('fieldStepOnsite').checked;
+                const isTbd = document.getElementById('fieldIsTbd').checked;
+                const dateVal = isTbd ? 'TBD' : document.getElementById('fieldDate').value;
 
-            const newProj = {
-                id: isEdit ? Number(idVal) : (projects.length ? Math.max(...projects.map(p => Number(p.id))) + 1 : 1),
-                name: document.getElementById('fieldName').value.trim(),
-                essQty: Number(document.getElementById('fieldEssQty').value) || 1,
-                location: document.getElementById('fieldLocation').value.trim(),
-                date: dateVal || 'TBD',
-                done: doneVal,
-                actualDate: document.getElementById('fieldActualDate').value,
-                satDone: Boolean(satSubVal || stepOnsiteVal),
-                satSubmitted: satSubVal,
-                commPersons: selectedEngs,
-                remark: document.getElementById('fieldRemark').value.trim(),
+                // Selected Engineers
+                const selectedEngs = [];
+                document.querySelectorAll('input[name="commPersons"]:checked').forEach(cb => {
+                    selectedEngs.push(cb.value);
+                });
 
-                // 5-Step Details
-                stepPO: document.getElementById('fieldStepPO').checked,
-                stepPODate: document.getElementById('fieldStepPODate').value,
-                stepDelivery: document.getElementById('fieldStepDelivery').checked,
-                stepDeliveryDate: document.getElementById('fieldStepDeliveryDate').value,
-                stepTraining: document.getElementById('fieldStepTraining').checked,
-                stepTrainingDate: document.getElementById('fieldStepTrainingDate').value,
-                stepComm: doneVal,
-                stepOnsite: stepOnsiteVal || Boolean(satSubVal)
-            };
+                const doneVal = document.getElementById('fieldDone').checked;
+                const satSubVal = document.getElementById('fieldSatSubmitted').value;
+                const stepOnsiteVal = document.getElementById('fieldStepOnsite').checked;
 
-            // Maintain report file if editing
-            if (isEdit) {
-                const oldP = projects.find(p => Number(p.id) === Number(idVal));
-                if (oldP && oldP.reportFile) newProj.reportFile = oldP.reportFile;
+                const newProj = {
+                    id: isEdit ? Number(idVal) : (projects.length ? Math.max(...projects.map(p => Number(p.id))) + 1 : 1),
+                    name: document.getElementById('fieldName').value.trim(),
+                    essQty: Number(document.getElementById('fieldEssQty').value) || 1,
+                    location: document.getElementById('fieldLocation').value.trim(),
+                    date: dateVal || 'TBD',
+                    done: doneVal,
+                    actualDate: document.getElementById('fieldActualDate').value,
+                    satDone: Boolean(satSubVal || stepOnsiteVal),
+                    satSubmitted: satSubVal,
+                    commPersons: selectedEngs,
+                    remark: document.getElementById('fieldRemark').value.trim(),
+
+                    // 5-Step Details
+                    stepPO: document.getElementById('fieldStepPO').checked,
+                    stepPODate: document.getElementById('fieldStepPODate').value,
+                    stepDelivery: document.getElementById('fieldStepDelivery').checked,
+                    stepDeliveryDate: document.getElementById('fieldStepDeliveryDate').value,
+                    stepTraining: document.getElementById('fieldStepTraining').checked,
+                    stepTrainingDate: document.getElementById('fieldStepTrainingDate').value,
+                    stepComm: doneVal,
+                    stepOnsite: stepOnsiteVal || Boolean(satSubVal)
+                };
+
+                // Maintain report file if editing
+                if (isEdit) {
+                    const oldP = projects.find(p => Number(p.id) === Number(idVal));
+                    if (oldP && oldP.reportFile) newProj.reportFile = oldP.reportFile;
+                }
+
+                const saveResult = await syncSaveProject(newProj);
+                if (saveResult === 'error') return;
+                if (saveResult === 'not-ready') {
+                    window.showToast('กำลังโหลดข้อมูล กรุณารอสักครู่แล้วลองบันทึกใหม่', 'info');
+                    return;
+                }
+
+                window.closeModal();
+                if (saveResult === 'cloud') {
+                    window.showToast(isEdit ? "แก้ไขโปรเจกต์และบันทึก Cloud สำเร็จ" : "เพิ่มโปรเจกต์และบันทึก Cloud สำเร็จ", "success");
+                } else {
+                    window.showToast(isEdit ? "แก้ไขโปรเจกต์ในเครื่องนี้แล้ว แต่ยังไม่ได้ Sync Cloud" : "เพิ่มโปรเจกต์ในเครื่องนี้แล้ว แต่ยังไม่ได้ Sync Cloud", "info");
+                }
+            } catch (err) {
+                console.error("Project Save Failed:", err);
+                window.showToast("บันทึกโปรเจกต์ไม่สำเร็จ กรุณาลองอีกครั้ง", "error");
+            } finally {
+                if (submitButton) submitButton.disabled = false;
             }
-
-            syncSaveProject(newProj);
-            window.closeModal();
-            window.showToast(isEdit ? "แก้ไขโปรเจกต์สำเร็จ" : "เพิ่มโปรเจกต์ใหม่เรียบร้อย", "success");
         };
 
         window.confirmDeleteProject = function(id) {
