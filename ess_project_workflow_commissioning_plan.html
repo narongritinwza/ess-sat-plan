@@ -282,7 +282,7 @@
                     <thead>
                         <tr class="bg-corpNavy text-white">
                             <th class="p-2.5 rounded-tl-lg w-12 text-center">#</th>
-                            <th class="p-2.5 font-bold min-w-[200px]">ชื่อโปรเจกต์ (Project Name)</th>
+                            <th class="p-2.5 font-bold min-w-[200px]">ชื่อโปรเจกต์ / PN</th>
                             <th class="p-2.5 text-center w-20">จำนวน ESS</th>
                             <th class="p-2.5 text-center min-w-[130px]">1. ได้รับ PO</th>
                             <th class="p-2.5 text-center min-w-[130px]">2. ส่งของ</th>
@@ -306,8 +306,9 @@
                     <thead>
                         <tr class="bg-corpNavy text-white">
                             <th class="p-2.5 rounded-tl-lg w-12 text-center">#</th>
-                            <th class="p-2.5 font-bold min-w-[200px]">ชื่อโปรเจกต์</th>
+                            <th class="p-2.5 font-bold min-w-[200px]">ชื่อโปรเจกต์ / PN</th>
                             <th class="p-2.5 text-center w-20">จำนวน ESS</th>
+                            <th class="p-2.5 min-w-[180px]">Serial Number (ESS)</th>
                             <th class="p-2.5 text-center min-w-[110px]">วันที่แผน</th>
                             <th class="p-2.5 text-center min-w-[110px]">สถานะ Comm</th>
                             <th class="p-2.5 text-center min-w-[140px]">วันที่จริง</th>
@@ -347,8 +348,12 @@
             <form id="formProject" onsubmit="window.saveProjectForm(event)" class="p-6 overflow-y-auto space-y-4 text-xs md:text-sm">
                 <input type="hidden" id="fieldId">
 
-                <!-- Row 1: Name & ESS Qty -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Project Number, Name & ESS Qty -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">เลข PN <span id="pnRequiredMark" class="text-red-600">*</span></label>
+                        <input type="text" id="fieldPn" maxlength="100" autocomplete="off" placeholder="กรอกเลข PN" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-corpNavy focus:outline-none">
+                    </div>
                     <div class="md:col-span-2">
                         <label class="block font-semibold text-slate-700 mb-1">ชื่อโปรเจกต์ *</label>
                         <input type="text" id="fieldName" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-corpNavy focus:outline-none">
@@ -357,6 +362,12 @@
                         <label class="block font-semibold text-slate-700 mb-1">จำนวน ESS (ชุด)</label>
                         <input type="number" id="fieldEssQty" min="0" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-corpNavy focus:outline-none" placeholder="เช่น 2">
                     </div>
+                </div>
+
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Serial Number ของ ESS</label>
+                    <textarea id="fieldSerialNumbers" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-corpNavy focus:outline-none" placeholder="ใส่หนึ่งหมายเลขต่อบรรทัด"></textarea>
+                    <p class="mt-1 text-xs text-slate-500">หากมี ESS หลายชุด ให้กรอก Serial Number แยกบรรทัด</p>
                 </div>
 
                 <!-- Row 2: Location & Comm Plan Date -->
@@ -561,6 +572,8 @@
                 satDone: Boolean(p.satDone),
                 satSubmitted: p.satSubmitted || '',
                 commPersons: Array.isArray(p.commPersons) ? p.commPersons : [],
+                pn: getProjectPN(p),
+                serialNumbers: getSerialNumbers(p),
                 remark: p.remark || '',
                 reportFile: p.reportFile || null,
                 // 5-Step Workflow Flags & Dates
@@ -599,6 +612,15 @@
             const parts = dateStr.split('-');
             if (parts.length !== 3) return dateStr;
             return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        }
+
+        function getSerialNumbers(project) {
+            const values = Array.isArray(project.serialNumbers) ? project.serialNumbers : [project.serialNumbers];
+            return values.filter(value => value !== null && value !== undefined).map(value => String(value).trim()).filter(Boolean);
+        }
+
+        function getProjectPN(project) {
+            return project.pn === null || project.pn === undefined ? '' : String(project.pn).trim();
         }
 
         // Toast Helper
@@ -855,7 +877,9 @@
                 const matchQuery = !query ||
                     (p.name && p.name.toLowerCase().includes(query)) ||
                     (p.location && p.location.toLowerCase().includes(query)) ||
-                    (p.commPersons && p.commPersons.join(' ').toLowerCase().includes(query));
+                    (p.commPersons && p.commPersons.join(' ').toLowerCase().includes(query)) ||
+                    (getProjectPN(p) && getProjectPN(p).toLowerCase().includes(query)) ||
+                    getSerialNumbers(p).some(serialNumber => serialNumber.toLowerCase().includes(query));
 
                 if (!matchQuery) return false;
 
@@ -904,7 +928,7 @@
                     <td class="p-2.5 text-center font-mono text-slate-500 font-semibold">${idx + 1}</td>
                     <td class="p-2.5">
                         <div class="font-bold text-slate-800">${escapeHtml(p.name)}</div>
-                        <div class="text-[11px] text-slate-400 font-mono">ID: #${p.id}</div>
+                        <div class="text-[11px] text-slate-400 font-mono">PN: ${escapeHtml(getProjectPN(p) || 'ยังไม่ระบุ')}</div>
                     </td>
                     <td class="p-2.5 text-center font-bold font-mono text-blue-700 bg-blue-50/50 rounded">${p.essQty || 1}</td>
 
@@ -984,8 +1008,12 @@
                 tr.className = 'hover:bg-slate-50 transition border-b border-slate-100';
                 tr.innerHTML = `
                     <td class="p-2.5 text-center font-mono text-slate-500 font-semibold">${idx + 1}</td>
-                    <td class="p-2.5 font-bold text-slate-800">${escapeHtml(p.name)}</td>
+                    <td class="p-2.5">
+                        <div class="font-bold text-slate-800">${escapeHtml(p.name)}</div>
+                        <div class="text-[11px] text-slate-400 font-mono">PN: ${escapeHtml(getProjectPN(p) || 'ยังไม่ระบุ')}</div>
+                    </td>
                     <td class="p-2.5 text-center font-bold font-mono text-blue-700 bg-blue-50/50 rounded">${p.essQty || 1}</td>
+                    <td class="p-2.5 text-xs">${getSerialNumbers(p).length ? getSerialNumbers(p).map(escapeHtml).join('<br>') : '-'}</td>
                     <td class="p-2.5 text-center font-mono">${formatDate(p.date)}</td>
 
                     <!-- Comm Status Badge Toggle -->
@@ -1178,6 +1206,9 @@
             document.getElementById('modalProjectTitle').innerText = 'เพิ่มโปรเจกต์ใหม่ (Add Project)';
             document.getElementById('formProject').reset();
             document.getElementById('fieldId').value = '';
+            document.getElementById('fieldPn').required = true;
+            document.getElementById('pnRequiredMark').hidden = false;
+            document.getElementById('fieldSerialNumbers').value = '';
             document.getElementById('fieldDate').disabled = false;
 
             // Default dates & checkboxes
@@ -1192,6 +1223,11 @@
 
             document.getElementById('modalProjectTitle').innerText = `แก้ไขโปรเจกต์: ${p.name}`;
             document.getElementById('fieldId').value = p.id;
+            const projectPN = getProjectPN(p);
+            document.getElementById('fieldPn').value = projectPN;
+            document.getElementById('fieldPn').required = Boolean(projectPN);
+            document.getElementById('pnRequiredMark').hidden = !projectPN;
+            document.getElementById('fieldSerialNumbers').value = getSerialNumbers(p).join('\n');
             document.getElementById('fieldName').value = p.name || '';
             document.getElementById('fieldEssQty').value = p.essQty || 1;
             document.getElementById('fieldLocation').value = p.location || '';
@@ -1249,9 +1285,31 @@
 
                 const idVal = document.getElementById('fieldId').value;
                 const isEdit = Boolean(idVal);
+                const pnVal = document.getElementById('fieldPn').value.trim();
+                if (!isEdit && !pnVal) {
+                    window.showToast('กรุณากรอกเลข PN ก่อนบันทึก', 'error');
+                    document.getElementById('fieldPn').focus();
+                    return;
+                }
+
+                const duplicatePN = pnVal && projects.some(p =>
+                    String(p.id) !== String(idVal) &&
+                    getProjectPN(p).toLowerCase() === pnVal.toLowerCase()
+                );
+                if (duplicatePN) {
+                    window.showToast('เลข PN นี้ถูกใช้กับโปรเจกต์อื่นแล้ว', 'error');
+                    document.getElementById('fieldPn').focus();
+                    return;
+                }
 
                 const isTbd = document.getElementById('fieldIsTbd').checked;
                 const dateVal = isTbd ? 'TBD' : document.getElementById('fieldDate').value;
+                const serialNumbers = [...new Set(
+                    document.getElementById('fieldSerialNumbers').value
+                        .split(/\r?\n/)
+                        .map(serialNumber => serialNumber.trim())
+                        .filter(Boolean)
+                )];
 
                 // Selected Engineers
                 const selectedEngs = [];
@@ -1265,8 +1323,10 @@
 
                 const newProj = {
                     id: isEdit ? Number(idVal) : (projects.length ? Math.max(...projects.map(p => Number(p.id))) + 1 : 1),
+                    pn: pnVal,
                     name: document.getElementById('fieldName').value.trim(),
                     essQty: Number(document.getElementById('fieldEssQty').value) || 1,
+                    serialNumbers,
                     location: document.getElementById('fieldLocation').value.trim(),
                     date: dateVal || 'TBD',
                     done: doneVal,
@@ -1334,12 +1394,12 @@
         // Export CSV (with UTF-8 BOM)
         window.exportCSV = function() {
             let csv = '\uFEFF'; // UTF-8 BOM
-            csv += 'ID,ชื่อโปรเจกต์,จำนวน ESS,สถานที่/จังหวัด,วันที่แผน Comm,สถานะ Comm,วันที่จริง Comm,วิศวกรผู้ดูแล,กำหนดส่ง SAT,สถานะ SAT,วันที่ส่ง SAT,หมายเหตุ\n';
+            csv += 'PN,ชื่อโปรเจกต์,Serial Number ของ ESS,จำนวน ESS,สถานที่/จังหวัด,วันที่แผน Comm,สถานะ Comm,วันที่จริง Comm,วิศวกรผู้ดูแล,กำหนดส่ง SAT,สถานะ SAT,วันที่ส่ง SAT,หมายเหตุ\n';
 
             projects.forEach(p => {
                 const satDue = calcSatDue(p.date);
                 const engs = (p.commPersons || []).join('; ');
-                csv += `"${p.id}","${escapeCsv(p.name)}","${p.essQty || 1}","${escapeCsv(p.location)}","${p.date}","${p.done ? 'Done' : 'Pending'}","${p.actualDate}","${escapeCsv(engs)}","${satDue}","${p.satDone ? 'Done' : 'Pending'}","${p.satSubmitted}","${escapeCsv(p.remark)}"\n`;
+                csv += `"${escapeCsv(getProjectPN(p))}","${escapeCsv(p.name)}","${escapeCsv(getSerialNumbers(p).join('; '))}","${p.essQty || 1}","${escapeCsv(p.location)}","${p.date}","${p.done ? 'Done' : 'Pending'}","${p.actualDate}","${escapeCsv(engs)}","${satDue}","${p.satDone ? 'Done' : 'Pending'}","${p.satSubmitted}","${escapeCsv(p.remark)}"\n`;
             });
 
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -1378,6 +1438,7 @@
             // Sheet 2: 5-Step Workflow
             const workflowRows = projects.map((p, i) => ({
                 "No.": i + 1,
+                "PN": getProjectPN(p),
                 "Project Name": p.name,
                 "ESS Qty": p.essQty || 1,
                 "1. PO Received": p.stepPO ? "Yes" : "No",
@@ -1393,8 +1454,10 @@
             // Sheet 3: Commissioning & SAT Detail
             const satRows = projects.map((p, i) => ({
                 "No.": i + 1,
+                "PN": getProjectPN(p),
                 "Project Name": p.name,
                 "ESS Qty": p.essQty || 1,
+                "ESS Serial Numbers": getSerialNumbers(p).join(', '),
                 "Plan Comm Date": p.date,
                 "Comm Status": p.done ? "Completed" : "Pending",
                 "Actual Comm Date": p.actualDate || "-",
@@ -1438,8 +1501,10 @@
                         <thead>
                             <tr>
                                 <th>#</th>
+                                <th>PN</th>
                                 <th>ชื่อโปรเจกต์</th>
                                 <th>ESS (ชุด)</th>
+                                <th>Serial Number (ESS)</th>
                                 <th>วันที่แผน</th>
                                 <th>สถานะ Comm</th>
                                 <th>วันที่จริง</th>
@@ -1456,8 +1521,10 @@
                 html += `
                     <tr>
                         <td style="text-align:center">${idx+1}</td>
-                        <td><b>${p.name}</b></td>
+                        <td>${escapeHtml(getProjectPN(p) || '-')}</td>
+                        <td><b>${escapeHtml(p.name)}</b></td>
                         <td style="text-align:center">${p.essQty||1}</td>
+                        <td>${getSerialNumbers(p).map(escapeHtml).join(', ') || '-'}</td>
                         <td style="text-align:center">${p.date}</td>
                         <td style="text-align:center">${p.done ? 'เสร็จสิ้น' : 'รอดำเนินการ'}</td>
                         <td style="text-align:center">${p.actualDate||'-'}</td>
@@ -1514,8 +1581,10 @@
                         if (Array.isArray(importedData)) {
                             projects = importedData.map(p => ({
                                 id: p.id,
+                                pn: getProjectPN(p),
                                 name: p.name,
                                 essQty: p.essQty || 1,
+                                serialNumbers: getSerialNumbers(p),
                                 date: p.date || 'TBD',
                                 done: Boolean(p.done),
                                 actualDate: p.actualDate || '',
